@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Klipso — Turn 1 YouTube video into 10 viral shorts in seconds</title>
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Aleo (100..900) + Inter + Montserrat (for viral captions) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Aleo:ital,wght@0,100..900;1,100..900&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:ital,wght@0,800;0,900;1,900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Aleo', 'Georgia', 'serif'],
+            viral: ['Montserrat', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            klipso: {
+              bg: '#0B0A16',
+              dark: '#05050C',
+              purple: '#6D42F6',
+              purpleHover: '#5B32E5',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Base page background */
+    body {
+      background-color: #0B0A16;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Hero section deep indigo-purple studio backdrop */
+    .hero-backdrop {
+      background-color: #0B0A16;
+      background-image:
+        radial-gradient(ellipse 92% 80% at 50% 42%, #281F5E 0%, #20184D 50%, #110D2A 82%, #0B0A16 100%);
+    }
+
+    /* 1. Smooth Floating / Bobbing Animation for Hero Short Cards */
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    .floating-card {
+      will-change: transform;
+      pointer-events: none;
+      backface-visibility: hidden;
+    }
+
+    .animate-float-1 {
+      animation: float 4.6s ease-in-out infinite;
+      animation-delay: 0s;
+    }
+    .animate-float-2 {
+      animation: float 5.2s ease-in-out infinite;
+      animation-delay: 1s;
+    }
+    .animate-float-3 {
+      animation: float 4.8s ease-in-out infinite;
+      animation-delay: 2s;
+    }
+    .animate-float-4 {
+      animation: float 5.6s ease-in-out infinite;
+      animation-delay: 1.5s;
+    }
+    .animate-float-5 {
+      animation: float 4.5s ease-in-out infinite;
+      animation-delay: 0.7s;
+    }
+    .animate-float-6 {
+      animation: float 5.4s ease-in-out infinite;
+      animation-delay: 2.3s;
+    }
+    .animate-float-7 {
+      animation: float 4.9s ease-in-out infinite;
+      animation-delay: 1.2s;
+    }
+    .animate-float-8 {
+      animation: float 5.9s ease-in-out infinite;
+      animation-delay: 2.8s;
+    }
+
+    /* 3. Infinite Marquee Animation (Right to Left) */
+    @keyframes marquee {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .animate-marquee {
+      display: flex;
+      width: max-content;
+      animation: marquee 30s linear infinite;
+    }
+
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+
+    /* Edge fade mask for Marquee container */
+    .marquee-mask {
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+    }
+
+    /* Viral caption text stroke */
+    .viral-stroke {
+      text-shadow:
+        -1.5px -1.5px 0 #000,
+         1.5px -1.5px 0 #000,
+        -1.5px  1.5px 0 #000,
+         1.5px  1.5px 0 #000,
+         0px 3px 6px rgba(0, 0, 0, 0.85);
+    }
+
+    .card-shadow {
+      box-shadow: 0 22px 45px -12px rgba(0, 0, 0, 0.85), 0 0 1px 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .float-card-1 {
+      will-change: transform;
+      backface-visibility: hidden;
+      animation: float 4.6s ease-in-out infinite;
+      animation-delay: 0s;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-[#6D42F6] selection:text-white">
+
+  <!-- ========================================================= -->
+  <!-- 1. DYNAMIC NAVBAR (Transparent at top -> Blurred on scroll)-->
+  <!-- ========================================================= -->
+  <nav id="navbar" class="fixed top-0 left-0 w-full z-50 px-16 py-4 flex items-center justify-between transition-all duration-300 bg-transparent">
+    
+    <!-- Left: Klipso Logo (shrink-0) -->
+    <a href="javascript:void(0)" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="shrink-0 flex items-center gap-3 group focus:outline-none">
+      <svg class="w-8 h-8 text-white transition-transform duration-200 group-hover:scale-105" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="4" width="6.5" height="30" rx="3.25" fill="currentColor"/>
+        <path d="M12.5 19L25.5 7.5V15.2L17.8 19L25.5 22.8V30.5L12.5 19Z" fill="currentColor"/>
+        <circle cx="26.5" cy="19" r="3.6" fill="currentColor"/>
+        <path d="M25.6 17.5L28.3 19L25.6 20.5V17.5Z" fill="#0B0A16"/>
+      </svg>
+      <span class="font-['Aleo'] font-bold text-xl tracking-wide text-white">Klipso</span>
+    </a>
+
+    <!-- Navigation Links shifted closer to Logo -->
+    <div class="hidden md:flex items-center gap-8 ml-12 lg:ml-16 mr-auto text-[15px] font-normal text-zinc-100">
+      <a href="javascript:void(0)" onclick="document.getElementById('features').scrollIntoView({ behavior: 'smooth' })" class="hover:text-white/80 transition-colors">Features</a>
+      <a href="javascript:void(0)" onclick="document.getElementById('process').scrollIntoView({ behavior: 'smooth' })" class="hover:text-white/80 transition-colors">How It Works</a>
+      <a href="javascript:void(0)" onclick="document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' })" class="hover:text-white/80 transition-colors">Pricing</a>
+      <div class="relative group">
+        <button type="button" onclick="document.getElementById('faq').scrollIntoView({ behavior: 'smooth' })" class="flex items-center gap-1.5 hover:text-white/80 transition-colors focus:outline-none py-1 cursor-pointer">
+          <span>FAQ</span>
+          <svg class="w-3.5 h-3.5 text-zinc-200 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <!-- Dropdown menu -->
+        <div class="absolute left-0 top-full pt-2 w-52 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+          <div class="bg-[#151130] border border-white/10 rounded-xl p-2 shadow-2xl text-xs text-zinc-300 space-y-1">
+            <a href="javascript:void(0)" onclick="document.getElementById('faq').scrollIntoView({ behavior: 'smooth' })" class="block px-3 py-2 rounded-lg hover:bg-white/5 hover:text-white">What video length works?</a>
+            <a href="javascript:void(0)" onclick="document.getElementById('faq').scrollIntoView({ behavior: 'smooth' })" class="block px-3 py-2 rounded-lg hover:bg-white/5 hover:text-white">Supported languages (30+)</a>
+            <a href="javascript:void(0)" onclick="document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' })" class="block px-3 py-2 rounded-lg hover:bg-white/5 hover:text-white">Refund policy &amp; plans</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Action Buttons -->
+    <div class="flex items-center gap-4 shrink-0 ml-auto md:ml-0">
+      <button type="button" onclick="document.getElementById('hero-input').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => document.getElementById('hero-input').focus(), 500);" class="border border-white/40 hover:border-white text-zinc-200 hover:text-white px-5 py-2 rounded-xl text-sm font-medium bg-[#140F2D]/60 hover:bg-white/5 transition-colors cursor-pointer">
+        Log In
+      </button>
+      <button type="button" onclick="document.getElementById('hero-input').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => document.getElementById('hero-input').focus(), 500);" class="bg-[#6D42F6] hover:bg-[#5B32E5] text-white px-5 py-2 rounded-xl text-sm font-medium shadow-lg shadow-[#6D42F6]/30 transition-all cursor-pointer">
+        Start Free
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========================================================= -->
+  <!-- 2. HERO SECTION WITH 8 FLOATING 9:16 SHORT VIDEO CARDS    -->
+  <!-- ========================================================= -->
+  <main id="hero" class="hero-backdrop min-h-[950px] h-screen w-full relative overflow-hidden flex flex-col justify-center items-center pt-24 pb-16 px-4 bg-[#1E194D]/35">
+
+    <!-- CARD 1: Top-Left (Doctor / Brain Surgeon "@diaryofaceoclip") -->
+    <div class="absolute top-24 left-6 lg:left-10 w-36 lg:w-44 aspect-[9/14] rounded-2xl overflow-hidden border border-white/10 shadow-2xl z-10 pointer-events-none hidden md:block bg-zinc-900 float-card-1 card-shadow">
+      <img 
+        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" 
+        onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';"
+        alt="Brain Surgeon clip" 
+        class="w-full h-full object-cover object-center brightness-95"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent"></div>
+      <!-- Animated Subtitles Overlay -->
+      <div class="absolute bottom-9 inset-x-2 flex flex-col items-center text-center space-y-1">
+        <span class="bg-black/75 text-white text-[7.5px] lg:text-[8.5px] font-medium px-1.5 py-0.5 rounded leading-tight shadow">
+          and 8:00 the next morning,
+        </span>
+        <span class="bg-white text-black font-extrabold text-[8px] lg:text-[9px] px-1.5 py-0.5 rounded leading-tight shadow-md">
+          Brain Surgeon on the worst<br/>brain he's seen🧠
+        </span>
+      </div>
+      <!-- TikTok Watermark Bottom-Right -->
+      <div class="absolute bottom-2 right-2 flex flex-col items-end opacity-95">
+        <svg class="w-3.5 h-3.5 text-white drop-shadow" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+        </svg>
+        <span class="text-[5.5px] text-zinc-200 font-medium tracking-tighter">@diaryofaceoclip</span>
+      </div>
+    </div>
+
+    <!-- CARD 2: Top-Center (Basketball "I CAN MAKE THE SHOT BEFORE HE DOES") -->
+    <div class="floating-card animate-float-2 absolute top-6 left-[calc(50%-4.5rem)] w-36 aspect-[9/14] hidden xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
+      <img 
+        src="https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=500&q=80" 
+        onerror="this.src='https://placehold.co/360x560/222230/ffffff?text=Basketball+Challenge'"
+        alt="Basketball Challenge Clip" 
+        class="w-full h-full object-cover object-center brightness-95"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/15"></div>
+      <div class="absolute bottom-11 left-2 flex flex-col items-start opacity-90">
+        <svg class="w-3 h-3 text-white drop-shadow" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+        </svg>
+        <span class="text-[5px] text-white/90 font-semibold">TikTok</span>
+      </div>
+      <div class="absolute bottom-2.5 inset-x-1 text-center font-viral font-black uppercase leading-none tracking-tight">
+        <div class="text-white text-[9.5px] lg:text-[10.5px] viral-stroke">I CAN MAKE THE SHOT</div>
+        <div class="text-[#FFE600] text-[10px] lg:text-[11px] viral-stroke mt-0.5">BEFORE HE DOES</div>
+      </div>
+    </div>
+
+    <!-- CARD 3: Top-Right ("How Patels Took Over Motels In America") -->
+    <div class="floating-card animate-float-3 absolute top-24 right-6 lg:right-10 w-36 lg:w-44 aspect-[9/14] hidden lg:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
+      <img 
+        src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=500&q=80" 
+        onerror="this.src='https://placehold.co/360x560/2b2623/ffffff?text=Documentary+Short'"
+        alt="History Documentary Short" 
+        class="w-full h-full object-cover object-top sepia-[.35] grayscale-[.6] contrast-110 brightness-90"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+      <div class="absolute top-[42%] left-2 flex flex-col items-start opacity-90">
+        <svg class="w-3 h-3 text-white drop-shadow" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+        </svg>
+        <span class="text-[5px] text-white font-medium">TikTok</span>
+      </div>
+      <div class="absolute top-[52%] inset-x-1.5 flex flex-col items-center text-center space-y-0.5">
+        <span class="bg-[#F5D90A] text-black font-extrabold text-[8.5px] lg:text-[9.5px] px-1.5 py-0.5 rounded-[2px] leading-none shadow">
+          How Patels Took Over
+        </span>
+        <span class="bg-black/85 text-white font-extrabold text-[8.5px] lg:text-[9.5px] px-1.5 py-0.5 rounded-[2px] leading-none shadow">
+          Motels In America
+        </span>
+      </div>
+    </div>
+
+    <!-- CARD 4: Middle-Left (Podcaster "all 5 days") -->
+    <div class="floating-card animate-float-4 absolute top-[44%] left-44 w-36 aspect-[9/14] hidden xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
+      <img 
+        src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=500&q=80" 
+        onerror="this.src='https://placehold.co/360x560/1f1938/ffffff?text=Creator+Clip'"
+        alt="Creator with cap and beard" 
+        class="w-full h-full object-cover object-center brightness-90"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-indigo-950/30"></div>
+      <div class="absolute top-[54%] left-3 bg-black/85 px-2 py-0.5 rounded text-[10px] font-bold text-white shadow">
+        all <span class="text-[#FACC15]">5</span> days
+      </div>
+      <div class="absolute bottom-3 right-3 flex flex-col items-center opacity-90">
+        <svg class="w-3.5 h-3.5 text-white drop-shadow" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+        </svg>
+        <span class="text-[6px] text-zinc-200 font-semibold">TikTok</span>
+      </div>
+    </div>
+
+    <!-- CARD 5: Middle-Right (Female podcaster "following order") -->
+    <div class="floating-card animate-float-5 absolute top-[44%] right-44 w-36 aspect-[9/14] hidden xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
+      <img 
+        src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=500&q=80" 
+        onerror="this.src='https://placehold.co/360x560/1c2e24/ffffff?text=Podcast+Host'"
+        alt="Female Podcast Host" 
+        class="w-full h-full object-cover object-top brightness-95"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-emerald-950/25"></div>
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-7 h-20 bg-zinc-900 rounded-t-lg border border-white/15 shadow-inner"></div>
+      <div class="absolute top-[60%] inset-x-2 text-center">
+        <span class="text-white font-['Aleo'] font-semibold text-xs drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
+          following order
+        </span>
+      </div>
+    </div>
+
+    <!-- CARD 6: Bottom-Left (Male speaker in nature - >180px vertical separation from Top-Left Card) -->
+    <div class="floating-card animate-float-6 absolute bottom-12 left-6 lg:left-10 w-36 lg:w-44 aspect-[9/14] hidden lg:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
+      <img 
+        src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80" 
+        onerror="this.src='https://placehold.co/360x560/1f351f/ffffff?text=Creator+Vlog'"
+        alt="Outdoor Creator Short" 
+        class="w-full h-full object-cover object-top brightness-95"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-emerald-900/20"></div>
+    </div>
+
+    <!-- CARD 7: Bottom-Center (RAW / EDITED split screen) -->
+    <div class="floating-card animate-float-7 absolute bottom-4 left-[calc(50%+3rem)] w-36 aspect-[9/14] hidden xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-950 pointer-events-none card-shadow">
+      <div class="w-full h-full grid grid-cols-2 relative">
+        <!-- Left Half: RAW -->
+        <div class="relative h-full border-r border-white/15 overflow-hidden bg-zinc-900">
+          <img 
+            src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80" 
+            onerror="this.src='https://placehold.co/180x560/27272a/ffffff?text=RAW'"
+            alt="Raw Footage" 
+            class="w-full h-full object-cover object-center opacity-75 saturate-50"
+          />
+          <div class="absolute inset-0 bg-purple-950/35"></div>
+          <span class="absolute top-4 left-1/2 -translate-x-1/2 text-[9px] lg:text-[10px] font-viral font-black tracking-wider text-white uppercase drop-shadow">
+            RAW
+          </span>
+        </div>
+        <!-- Right Half: EDITED -->
+        <div class="relative h-full overflow-hidden bg-zinc-950">
+          <img 
+            src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80" 
+            onerror="this.src='https://placehold.co/180x560/18181b/ffffff?text=EDITED'"
+            alt="Edited Footage" 
+            class="w-full h-full object-cover object-center contrast-125 brightness-90"
+          />
+          <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/80"></div>
+          <span class="absolute top-4 left-1/2 -translate-x-1/2 text-[9px] lg:text-[10px] font-viral font-black tracking-wider text-white uppercase drop-shadow">
+            EDITED
+          </span>
+          <div class="absolute top-[38%] inset-x-1 text-center transform -rotate-3">
+            <div class="text-[7px] text-white/90 font-bold uppercase leading-none">“RISK</div>
+            <div class="text-[8px] lg:text-[9px] text-[#FFE600] font-viral font-black uppercase leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+              RISK<br/>MANAGEMENT
+            </div>
+            <div class="text-[7px] text-emerald-400 font-bold">”</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 8: Bottom-Right ("To have all this stuff" — Studio Podcast Host) -->
+    <div class="floating-card animate-float-8 absolute bottom-12 right-6 lg:right-10 w-36 lg:w-44 aspect-[9/14] hidden lg:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-950 pointer-events-none card-shadow">
+      <img 
+        src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80" 
+        onerror="this.src='https://placehold.co/360x560/111118/ffffff?text=Studio+Podcast'"
+        alt="Dark Studio Podcast" 
+        class="w-full h-full object-cover object-top brightness-75 contrast-125"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/30"></div>
+      <div class="absolute top-[55%] inset-x-2 text-center">
+        <span class="text-[8px] lg:text-[9px] text-zinc-100 font-['Aleo'] font-medium drop-shadow">
+          To have all this stuff
+        </span>
+      </div>
+    </div>
+
+    <!-- CENTRAL HERO CONTENT (Z-20, NEVER OVERLAPPED) -->
+    <div class="relative z-20 max-w-2xl mx-auto text-center pointer-events-auto">
+      
+      <!-- Main Heading (H1) with Aleo font and tracking-wide -->
+      <h1 class="font-['Aleo'] tracking-wide text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-sm">
+        Turn 1 YouTube video<br />
+        into 10 viral shorts in<br />
+        seconds
+      </h1>
+
+      <!-- Subtitle with Aleo font and tracking-wide -->
+      <p class="font-['Aleo'] tracking-wide text-zinc-300 text-sm sm:text-base mt-5 mb-8 max-w-xl mx-auto">
+        Paste your link, let AI extract the highest-retention moments, add animated captions, and reframe for 9:16 automatically.
+      </p>
+
+      <!-- YouTube Link Input Bar -->
+      <form id="generateForm" class="max-w-lg mx-auto">
+        <div class="flex items-center bg-[#07060E] border border-white/10 focus-within:border-[#6D42F6]/80 rounded-2xl p-2 pl-4 shadow-2xl transition-all">
+          
+          <!-- Left Upload Tray Icon -->
+          <svg class="w-5 h-5 text-white shrink-0 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0-12L8 8m4-4l4 4" />
+          </svg>
+
+          <!-- URL Input with id="hero-input" and scroll-mt-36 -->
+          <input 
+            id="hero-input"
+            type="text" 
+            placeholder="Paste YouTube URL to generate shorts" 
+            class="scroll-mt-36 w-full bg-transparent text-white placeholder-zinc-300 text-xs sm:text-[13.5px] font-normal focus:outline-none pr-2 disabled:opacity-50"
+            autocomplete="off"
+          />
+
+          <!-- Interactive Generate Button -->
+          <button 
+            id="generate-btn"
+            type="submit" 
+            class="cursor-pointer bg-[#6D42F6] hover:bg-[#5B32E5] active:scale-95 transition-all text-white text-xs sm:text-[13.5px] font-medium px-6 py-2.5 rounded-xl shrink-0 shadow-md flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
+          >
+            <svg id="generateSpinner" class="hidden w-4 h-4 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+              <path class="opacity-90" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span id="generateBtnText">Generate</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Micro-copy below form with relative z-20 mb-12 mt-4 -->
+      <p class="relative z-20 mb-12 mt-4 text-xs text-zinc-400">
+        No credit card required &bull; 3 free clips
+      </p>
+
+      <!-- Interactive Status Notification Banner -->
+      <div id="statusToast" class="hidden relative z-30 -mt-2 mb-4 mx-auto max-w-md bg-[#161233]/95 border border-[#6D42F6]/50 rounded-xl px-4 py-3 text-left shadow-2xl backdrop-blur-md transition-all">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <p id="statusText" class="text-xs text-white font-medium">
+              Success! 10 viral 9:16 shorts generated with animated captions.
+            </p>
+          </div>
+          <button type="button" id="closeToastBtn" class="text-zinc-400 hover:text-white text-sm leading-none px-1 cursor-pointer">&times;</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ========================================================= -->
+  <!-- 3. INFINITE LOGO MARQUEE SECTION (MATCHING SCREENSHOT 1)  -->
+  <!-- ========================================================= -->
+  <section class="relative z-30 w-full bg-[#05050A] py-14 border-t border-white/5 overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4">
+      <!-- Centered Aleo Heading -->
+      <p class="font-['Aleo'] text-xs text-zinc-400 tracking-wider mb-6 text-center">
+        Trusted by 12,000+ creators and media teams
+      </p>
+    </div>
+
+    <!-- Infinite Scrolling Marquee Container with Edge Fade -->
+    <div class="relative w-full overflow-hidden marquee-mask">
+      <!-- Side Gradient Overlays for Extra Smooth Fade -->
+      <div class="pointer-events-none absolute inset-y-0 left-0 w-20 sm:w-36 bg-gradient-to-r from-[#05050A] to-transparent z-10"></div>
+      <div class="pointer-events-none absolute inset-y-0 right-0 w-20 sm:w-36 bg-gradient-to-l from-[#05050A] to-transparent z-10"></div>
+
+      <!-- Marquee Track (Duplicated 2x for seamless -50% loop) -->
+      <div class="animate-marquee items-center py-2">
+        
+        <!-- FIRST SET OF 9 LOGOS -->
+        <div class="flex items-center gap-12 sm:gap-16 px-6 sm:px-8">
+          <!-- 1. Google -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center">
+            <span class="font-sans font-semibold text-2xl sm:text-[28px] tracking-tight text-white select-none">Google</span>
+          </div>
+
+          <!-- 2. NETFLIX -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center">
+            <span class="font-viral font-black text-xl sm:text-[23px] tracking-[0.08em] text-white uppercase select-none">NETFLIX</span>
+          </div>
+
+          <!-- 3. TikTok -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center gap-1.5 text-white">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+            </svg>
+            <span class="font-sans font-bold text-xl sm:text-[23px] tracking-tight select-none">TikTok</span>
+          </div>
+
+          <!-- 4. X -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center text-white">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </div>
+
+          <!-- 5. Instagram -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center text-white">
+            <span class="font-sans font-medium text-xl sm:text-[23px] tracking-wide select-none">Instagram</span>
+          </div>
+
+          <!-- 6. Spotify -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center gap-2 text-white">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.434-5.305-1.76-8.786-.963-.335.077-.67-.133-.746-.469-.077-.335.132-.67.469-.746 3.809-.87 7.076-.496 9.713 1.115.293.18.386.563.207.856zm1.224-2.722c-.226.367-.706.482-1.072.257-2.687-1.652-6.785-2.131-9.965-1.166-.413.127-.848-.106-.973-.517-.125-.413.108-.848.52-.973 3.632-1.102 8.147-.568 11.234 1.328.366.226.48.707.256 1.071zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71c-.493.15-1.016-.128-1.166-.62-.149-.493.129-1.016.621-1.166 3.532-1.073 9.404-.865 13.115 1.338.445.264.59.838.327 1.282-.264.444-.838.59-1.28.323z"/>
+            </svg>
+            <span class="font-sans font-bold text-lg sm:text-xl tracking-tight select-none">Spotify</span>
+          </div>
+
+          <!-- 7. Stanford -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center text-white">
+            <span class="font-['Aleo'] font-normal text-2xl sm:text-[26px] tracking-tight select-none">Stanford</span>
+          </div>
+
+          <!-- 8. BBC -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center gap-1.5">
+            <span class="bg-white text-black font-sans font-black text-sm sm:text-base w-6 h-6 flex items-center justify-center select-none">B</span>
+            <span class="bg-white text-black font-sans font-black text-sm sm:text-base w-6 h-6 flex items-center justify-center select-none">B</span>
+            <span class="bg-white text-black font-sans font-black text-sm sm:text-base w-6 h-6 flex items-center justify-center select-none">C</span>
+          </div>
+
+          <!-- 9. adidas -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center text-white">
+            <span class="font-sans font-black text-2xl sm:text-[27px] tracking-tighter lowercase select-none">adidas</span>
+          </div>
+        </div>
+
+        <!-- SECOND DUPLICATED SET OF 9 LOGOS FOR SEAMLESS INFINITE LOOP -->
+        <div class="flex items-center gap-12 sm:gap-16 px-6 sm:px-8" aria-hidden="true">
+          <!-- 1. Google -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center">
+            <span class="font-sans font-semibold text-2xl sm:text-[28px] tracking-tight text-white select-none">Google</span>
+          </div>
+
+          <!-- 2. NETFLIX -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center">
+            <span class="font-viral font-black text-xl sm:text-[23px] tracking-[0.08em] text-white uppercase select-none">NETFLIX</span>
+          </div>
+
+          <!-- 3. TikTok -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center gap-1.5 text-white">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+            </svg>
+            <span class="font-sans font-bold text-xl sm:text-[23px] tracking-tight select-none">TikTok</span>
+          </div>
+
+          <!-- 4. X -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center text-white">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </div>
+
+          <!-- 5. Instagram -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center text-white">
+            <span class="font-sans font-medium text-xl sm:text-[23px] tracking-wide select-none">Instagram</span>
+          </div>
+
+          <!-- 6. Spotify -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center gap-2 text-white">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.434-5.305-1.76-8.786-.963-.335.077-.67-.133-.746-.469-.077-.335.132-.67.469-.746 3.809-.87 7.076-.496 9.713 1.115.293.18.386.563.207.856zm1.224-2.722c-.226.367-.706.482-1.072.257-2.687-1.652-6.785-2.131-9.965-1.166-.413.127-.848-.106-.973-.517-.125-.413.108-.848.52-.973 3.632-1.102 8.147-.568 11.234 1.328.366.226.48.707.256 1.071zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71c-.493.15-1.016-.128-1.166-.62-.149-.493.129-1.016.621-1.166 3.532-1.073 9.404-.865 13.115 1.338.445.264.59.838.327 1.282-.264.444-.838.59-1.28.323z"/>
+            </svg>
+            <span class="font-sans font-bold text-lg sm:text-xl tracking-tight select-none">Spotify</span>
+          </div>
+
+          <!-- 7. Stanford -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center text-white">
+            <span class="font-['Aleo'] font-normal text-2xl sm:text-[26px] tracking-tight select-none">Stanford</span>
+          </div>
+
+          <!-- 8. BBC -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center gap-1.5">
+            <span class="bg-white text-black font-sans font-black text-sm sm:text-base w-6 h-6 flex items-center justify-center select-none">B</span>
+            <span class="bg-white text-black font-sans font-black text-sm sm:text-base w-6 h-6 flex items-center justify-center select-none">B</span>
+            <span class="bg-white text-black font-sans font-black text-sm sm:text-base w-6 h-6 flex items-center justify-center select-none">C</span>
+          </div>
+
+          <!-- 9. adidas -->
+          <div class="opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer shrink-0 flex items-center text-white">
+            <span class="font-sans font-black text-2xl sm:text-[27px] tracking-tighter lowercase select-none">adidas</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- 4. FEATURES SECTION: "Built for speed" (SCREENSHOT 400)   -->
+  <!-- ========================================================= -->
+  <section id="features" class="w-full bg-[#020205] relative z-20">
+    <div class="max-w-6xl mx-auto px-4 py-24 text-center">
+      
+      <!-- Top Purple Badge -->
+      <span class="bg-[#6D42F6]/20 text-[#A78BFA] border border-[#6D42F6]/30 text-xs px-3.5 py-1.5 rounded-full font-medium inline-block mb-4 shadow-sm">
+        Features
+      </span>
+
+      <!-- Section Heading H2 -->
+      <h2 class="font-['Aleo'] text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 tracking-wide">
+        Built for speed
+      </h2>
+
+      <!-- Section Subtitle -->
+      <p class="font-['Aleo'] text-zinc-400 text-sm sm:text-base max-w-xl mx-auto mb-14 tracking-wide">
+        Klipso AI finds the moments worth keeping and cuts the rest.
+      </p>
+
+      <!-- 4-Card Features Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+
+        <!-- ================================================= -->
+        <!-- CARD 1: AI Viral Hook Detection                   -->
+        <!-- ================================================= -->
+        <article class="group bg-[#121124]/60 border border-white/5 rounded-2xl p-4 overflow-hidden transition-all duration-300 ease-out hover:scale-[1.03] hover:-translate-y-1.5 hover:border-zinc-500/50 hover:bg-[#1A1830] hover:shadow-[0_0_25px_rgba(255,255,255,0.06)] flex flex-col justify-between">
+          <div>
+            <!-- Visual Mockup Container (16:10 aspect) -->
+            <div class="relative w-full h-44 rounded-xl overflow-hidden bg-[#0E131F] border border-white/10 mb-4">
+              <!-- Optional local image if present -->
+              <img src="./images/feature-1.png" alt="AI Viral Hook Detection" class="absolute inset-0 w-full h-full object-cover z-20" onerror="this.style.display='none'" />
+              
+              <!-- Built-in High-Precision Mockup matching 400.jpg -->
+              <div class="absolute inset-0 bg-gradient-to-br from-[#12192B] via-[#0B101B] to-[#081C24] p-2.5 flex flex-col justify-between">
+                <!-- Window Dots & Viral Potential Pill -->
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500/80"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400/80"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/80"></span>
+                  </div>
+                  <div class="bg-black/80 border border-amber-400/40 rounded-md px-2 py-0.5 text-[8.5px] font-bold text-white tracking-tight flex items-center gap-1 shadow-lg">
+                    <span>94% VIRAL POTENTIAL</span>
+                    <span>🔥</span>
+                  </div>
+                </div>
+
+                <!-- Middle Editor Area: Speaker + Glowing Retention Curve -->
+                <div class="relative h-24 rounded-lg bg-[#0A0E17] border border-white/5 overflow-hidden flex items-center justify-center my-1">
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Speaker" class="w-20 h-full object-cover opacity-55" />
+                  <span class="absolute top-1.5 left-2 text-[7px] text-zinc-400 bg-black/50 px-1.5 py-0.5 rounded">Retention Curve</span>
+                  
+                  <!-- Glowing Cyan SVG Curve -->
+                  <svg class="absolute inset-0 w-full h-full" viewBox="0 0 200 80" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="cyanGlow" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.45"/>
+                        <stop offset="100%" stop-color="#22D3EE" stop-opacity="0.0"/>
+                      </linearGradient>
+                    </defs>
+                    <path d="M10 65 Q 45 45, 75 48 T 135 16 Q 155 45, 190 52 L 190 80 L 10 80 Z" fill="url(#cyanGlow)" />
+                    <path d="M10 65 Q 45 45, 75 48 T 135 16 Q 155 45, 190 52" fill="none" stroke="#22D3EE" stroke-width="2.2" />
+                    <circle cx="135" cy="16" r="4" fill="#A5F3FC" />
+                    <circle cx="135" cy="16" r="8" fill="#22D3EE" fill-opacity="0.35" />
+                  </svg>
+
+                  <!-- Right HUD Box -->
+                  <div class="absolute right-1.5 top-2 bg-[#111827]/90 border border-white/10 rounded p-1.5 w-16 space-y-1">
+                    <div class="text-[5.5px] text-cyan-300 font-bold uppercase">HOOK DETECTED</div>
+                    <div class="w-full h-1 bg-white/10 rounded overflow-hidden">
+                      <div class="w-4/5 h-full bg-cyan-400"></div>
+                    </div>
+                    <div class="w-3/4 h-1 bg-white/10 rounded"></div>
+                  </div>
+                </div>
+
+                <!-- Bottom Filmstrip + Glowing Brain Icon -->
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex-1 h-4 bg-black/60 rounded border border-white/5 flex items-center px-1 gap-1 overflow-hidden">
+                    <span class="w-4 h-2.5 bg-amber-500/40 rounded-xs"></span>
+                    <span class="w-4 h-2.5 bg-cyan-500/40 rounded-xs"></span>
+                    <span class="w-4 h-2.5 bg-purple-500/40 rounded-xs"></span>
+                    <span class="w-4 h-2.5 bg-emerald-500/40 rounded-xs"></span>
+                  </div>
+                  <div class="w-7 h-7 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 text-xs shadow-[0_0_12px_rgba(34,211,238,0.5)]">
+                    🧠
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Text Content -->
+            <span class="text-xs text-zinc-400 font-semibold tracking-wide block">AI</span>
+            <h3 class="font-['Aleo'] text-white font-bold text-base mt-1 leading-snug">
+              AI Viral Hook Detection
+            </h3>
+            <p class="text-zinc-400 text-xs mt-2 leading-relaxed">
+              A retention curve graph highlights the peak at 94% viral potential.
+            </p>
+          </div>
+
+          <button type="button" class="text-xs text-zinc-300 hover:text-white mt-4 inline-flex items-center gap-1.5 font-medium transition-colors cursor-pointer">
+            <span>Learn more</span>
+            <svg class="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </article>
+
+        <!-- ================================================= -->
+        <!-- CARD 2: Dynamic Karaoke Captions                  -->
+        <!-- ================================================= -->
+        <article class="group bg-[#121124]/60 border border-white/5 rounded-2xl p-4 overflow-hidden transition-all duration-300 ease-out hover:scale-[1.03] hover:-translate-y-1.5 hover:border-zinc-500/50 hover:bg-[#1A1830] hover:shadow-[0_0_25px_rgba(255,255,255,0.06)] flex flex-col justify-between">
+          <div>
+            <!-- Visual Mockup Container -->
+            <div class="relative w-full h-44 rounded-xl overflow-hidden bg-[#171329] border border-white/10 mb-4">
+              <img src="./images/feature-2.png" alt="Dynamic Karaoke Captions" class="absolute inset-0 w-full h-full object-cover z-20" onerror="this.style.display='none'" />
+              
+              <!-- Built-in High-Precision Mockup matching 400.jpg -->
+              <div class="absolute inset-0 bg-gradient-to-br from-[#1C1833] via-[#131122] to-[#29173E] p-3 flex flex-col justify-between overflow-hidden">
+                <!-- Creator Photo on Right -->
+                <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80" alt="Excited Creator" class="absolute right-0 top-1 w-28 h-40 object-cover object-top rounded-l-xl opacity-90 contrast-110" />
+                <div class="absolute inset-0 bg-gradient-to-r from-[#141126] via-[#141126]/65 to-transparent"></div>
+
+                <!-- Tilted Karaoke Words -->
+                <div class="relative z-10 mt-1 transform -rotate-6 space-y-0.5">
+                  <div class="font-viral font-black text-sm tracking-tight leading-none">
+                    <span class="text-[#FF5E7E] drop-shadow">KARA</span><span class="text-[#FFE600] drop-shadow">OKE</span>
+                  </div>
+                  <div class="font-viral font-black text-sm text-[#38BDF8] tracking-tight leading-none drop-shadow">
+                    CAPTIONS!
+                  </div>
+                </div>
+
+                <!-- Emojis + WOW! -->
+                <div class="relative z-10 flex items-center gap-1.5 my-0.5 pl-3">
+                  <span class="text-base drop-shadow">🤩</span>
+                  <span class="text-base drop-shadow">🔥</span>
+                  <span class="text-[9px] font-viral font-black text-amber-300 bg-black/50 px-1.5 py-0.5 rounded rotate-6">WOW!</span>
+                </div>
+
+                <!-- Bottom DYNAMIC!⚡ Banner -->
+                <div class="relative z-10 transform -rotate-3">
+                  <span class="font-viral font-black text-lg tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-fuchsia-300 to-amber-300 drop-shadow-[0_3px_6px_rgba(0,0,0,0.9)]">
+                    ✨DYNAMIC!⚡
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Text Content -->
+            <span class="text-xs text-zinc-400 font-semibold tracking-wide block">Captions</span>
+            <h3 class="font-['Aleo'] text-white font-bold text-base mt-1 leading-snug">
+              Dynamic Karaoke Captions
+            </h3>
+            <p class="text-zinc-400 text-xs mt-2 leading-relaxed">
+              Animated highlighted text with emojis and custom fonts keeps viewers watching.
+            </p>
+          </div>
+
+          <button type="button" class="text-xs text-zinc-300 hover:text-white mt-4 inline-flex items-center gap-1.5 font-medium transition-colors cursor-pointer">
+            <span>Learn more</span>
+            <svg class="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </article>
+
+        <!-- ================================================= -->
+        <!-- CARD 3: Automatic Face Tracking                   -->
+        <!-- ================================================= -->
+        <article class="group bg-[#121124]/60 border border-white/5 rounded-2xl p-4 overflow-hidden transition-all duration-300 ease-out hover:scale-[1.03] hover:-translate-y-1.5 hover:border-zinc-500/50 hover:bg-[#1A1830] hover:shadow-[0_0_25px_rgba(255,255,255,0.06)] flex flex-col justify-between">
+          <div>
+            <!-- Visual Mockup Container -->
+            <div class="relative w-full h-44 rounded-xl overflow-hidden bg-[#101622] border border-white/10 mb-4">
+              <img src="./images/feature-3.png" alt="Automatic Face Tracking" class="absolute inset-0 w-full h-full object-cover z-20" onerror="this.style.display='none'" />
+              
+              <!-- Built-in High-Precision Mockup matching 400.jpg -->
+              <div class="absolute inset-0 bg-gradient-to-b from-[#1A2130] to-[#0C1017] flex items-center justify-center">
+                <!-- Top-right ratio pill -->
+                <span class="absolute top-2.5 right-2.5 text-[7px] text-zinc-300 bg-black/60 border border-white/10 px-1.5 py-0.5 rounded">9:16 / 16:9</span>
+                <span class="absolute bottom-2 left-2.5 text-[7px] text-zinc-400 bg-black/60 px-1.5 py-0.5 rounded">9:16 | 16:9</span>
+
+                <!-- Left Pill: FACE-TRACKING -->
+                <div class="absolute left-2 top-1/2 -translate-y-3 z-20 bg-[#0A2736]/90 border border-cyan-400/60 text-cyan-300 text-[7.5px] font-bold px-2 py-0.5 rounded shadow-lg">
+                  FACE-TRACKING
+                </div>
+
+                <!-- Right Pill: DEAD-CENTER -->
+                <div class="absolute right-2 top-1/2 translate-y-1 z-20 bg-[#2A181D]/90 border border-orange-400/60 text-orange-300 text-[7.5px] font-bold px-2 py-0.5 rounded shadow-lg">
+                  DEAD-CENTER
+                </div>
+
+                <!-- Center 9:16 Cyan Face Tracking Box -->
+                <div class="relative w-20 h-36 border-2 border-cyan-400/80 rounded-lg overflow-hidden shadow-[0_0_20px_rgba(34,211,238,0.25)]">
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" alt="Tracked Speaker" class="w-full h-full object-cover object-top" />
+                  <!-- Inner Face Reticle -->
+                  <div class="absolute top-4 left-1/2 -translate-x-1/2 w-11 h-12 border border-cyan-300/70 rounded-sm"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Text Content -->
+            <span class="text-xs text-zinc-400 font-semibold tracking-wide block">Reframing</span>
+            <h3 class="font-['Aleo'] text-white font-bold text-base mt-1 leading-snug">
+              Automatic Face Tracking
+            </h3>
+            <p class="text-zinc-400 text-xs mt-2 leading-relaxed">
+              Face tracking keeps the speaker perfectly centered in the frame at the 9:16 mark.
+            </p>
+          </div>
+
+          <button type="button" class="text-xs text-zinc-300 hover:text-white mt-4 inline-flex items-center gap-1.5 font-medium transition-colors cursor-pointer">
+            <span>Learn more</span>
+            <svg class="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </article>
+
+        <!-- ================================================= -->
+        <!-- CARD 4: Multi-Platform Auto-Scheduler             -->
+        <!-- ================================================= -->
+        <article class="group bg-[#121124]/60 border border-white/5 rounded-2xl p-4 overflow-hidden transition-all duration-300 ease-out hover:scale-[1.03] hover:-translate-y-1.5 hover:border-zinc-500/50 hover:bg-[#1A1830] hover:shadow-[0_0_25px_rgba(255,255,255,0.06)] flex flex-col justify-between">
+          <div>
+            <!-- Visual Mockup Container -->
+            <div class="relative w-full h-44 rounded-xl overflow-hidden bg-[#141424] border border-white/10 mb-4">
+              <img src="./images/feature-4.png" alt="Multi-Platform Auto-Scheduler" class="absolute inset-0 w-full h-full object-cover z-20" onerror="this.style.display='none'" />
+              
+              <!-- Built-in High-Precision Mockup matching 400.jpg -->
+              <div class="absolute inset-0 bg-gradient-to-br from-[#1B1B30] to-[#0E0E1A] p-2.5 flex items-center gap-2">
+                <!-- Left Stacked Social Icons (TikTok, Reels, Shorts) -->
+                <div class="flex flex-col gap-2 z-10 pl-0.5">
+                  <div class="w-7 h-7 rounded-lg bg-black border border-cyan-400/50 flex items-center justify-center text-white text-xs font-bold shadow-md">
+                    ♪
+                  </div>
+                  <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-md">
+                    ◎
+                  </div>
+                  <div class="w-7 h-7 rounded-lg bg-rose-600 flex items-center justify-center text-white text-xs font-bold shadow-md">
+                    ▶
+                  </div>
+                </div>
+
+                <!-- Right Calendar Grid Window -->
+                <div class="flex-1 h-full bg-[#121320] border border-white/10 rounded-lg p-2 flex flex-col justify-between">
+                  <div class="flex items-center justify-between border-b border-white/5 pb-1">
+                    <span class="text-[7.5px] text-zinc-200 font-semibold">In Queue</span>
+                    <span class="bg-sky-500 text-white text-[6.5px] font-bold px-1.5 py-0.5 rounded">1-Click Publish</span>
+                  </div>
+
+                  <!-- Calendar Checkmark Cells -->
+                  <div class="grid grid-cols-4 gap-1 my-auto">
+                    <div class="h-5 rounded bg-white/5"></div>
+                    <div class="h-5 rounded bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center text-emerald-300 text-[9px]">✓</div>
+                    <div class="h-5 rounded bg-white/5"></div>
+                    <div class="h-5 rounded bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center text-emerald-300 text-[9px]">✓</div>
+                    <div class="h-5 rounded bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center text-emerald-300 text-[9px]">✓</div>
+                    <div class="h-5 rounded bg-white/5"></div>
+                    <div class="h-5 rounded bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center text-emerald-300 text-[9px]">✓</div>
+                    <div class="h-5 rounded bg-white/5"></div>
+                  </div>
+
+                  <div class="flex justify-end">
+                    <span class="text-[6.5px] text-zinc-300 bg-white/10 px-1.5 py-0.5 rounded">🕒 Post at 7:00 PM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Text Content -->
+            <span class="text-xs text-zinc-400 font-semibold tracking-wide block">Scheduling</span>
+            <h3 class="font-['Aleo'] text-white font-bold text-base mt-1 leading-snug">
+              Multi-Platform Auto-Scheduler
+            </h3>
+            <p class="text-zinc-400 text-xs mt-2 leading-relaxed">
+              One-click publish queue for YouTube Shorts, Reels, and TikTok.
+            </p>
+          </div>
+
+          <button type="button" class="text-xs text-zinc-300 hover:text-white mt-4 inline-flex items-center gap-1.5 font-medium transition-colors cursor-pointer">
+            <span>Learn more</span>
+            <svg class="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- 5. PROCESS SECTION: "How it works" (SCREENSHOT 370)       -->
+  <!-- ========================================================= -->
+  <section id="process" class="w-full relative z-20 py-24 px-4 border-t border-white/5" style="background: radial-gradient(ellipse 95% 85% at 50% 45%, #28205E 0%, #211A4E 55%, #171238 100%);">
+    <div class="max-w-6xl mx-auto text-center">
+      
+      <!-- Dark Badge "Process" -->
+      <span class="bg-zinc-900 border border-white/10 text-zinc-300 text-xs px-3 py-1 rounded-full inline-block mb-3 font-['Aleo'] shadow-lg">
+        Process
+      </span>
+
+      <!-- Section Heading H2 -->
+      <h2 class="font-['Aleo'] tracking-wide text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3">
+        How it works
+      </h2>
+
+      <!-- Section Subtitle -->
+      <p class="font-['Aleo'] tracking-wide text-zinc-200 text-sm sm:text-base mb-14 max-w-xl mx-auto">
+        From long video to ready-to-post clips in three steps.
+      </p>
+
+      <!-- 3-Step Bento Grid (1 col + 1 col + 2 cols on lg) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto items-stretch text-left">
+
+        <!-- ================================================= -->
+        <!-- STEP 01 (col-span-1): Import Video                -->
+        <!-- ================================================= -->
+        <article class="group col-span-1 bg-[#261F57]/70 border border-white/15 rounded-3xl overflow-hidden flex flex-col justify-between hover:border-zinc-400/50 hover:scale-[1.01] transition-all duration-300 shadow-2xl">
+          <!-- Top Mockup Area -->
+          <div class="relative w-full h-48 bg-[#121024] border-b border-white/10 overflow-hidden flex items-center justify-center p-4">
+            <img src="./images/step-1.png" alt="Step 01 Import Video" class="absolute inset-0 w-full h-full object-cover z-20" onerror="this.style.display='none'" />
+            
+            <!-- Built-in Glowing Cloud Upload UI matching 370.jpg -->
+            <div class="relative w-full h-full rounded-xl bg-gradient-to-b from-[#1A1C35] to-[#0E1020] border border-white/15 p-3 flex flex-col justify-between shadow-[0_0_25px_rgba(56,189,248,0.12)]">
+              <!-- Top Glow Accent -->
+              <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-cyan-400/25 blur-md rounded-full"></div>
+
+              <!-- Dashed Inner Dropzone with Cloud & Floating Video Icons -->
+              <div class="relative flex-1 rounded-lg border border-dashed border-cyan-400/35 bg-[#0C0E1C]/80 flex items-center justify-center overflow-hidden">
+                <!-- Floating Media File Icons -->
+                <div class="absolute left-3 top-2.5 w-5 h-6 rounded border border-cyan-400/30 bg-cyan-500/10 flex items-center justify-center text-[7px] text-cyan-300">▶</div>
+                <div class="absolute right-3 top-2 w-5 h-6 rounded border border-purple-400/30 bg-purple-500/10 flex items-center justify-center text-[7px] text-purple-300">▶</div>
+                <div class="absolute right-4 bottom-2 w-5 h-6 rounded border border-cyan-400/30 bg-cyan-500/10 flex items-center justify-center text-[7px] text-cyan-300">▶</div>
+
+                <!-- Glowing Neon Cloud Icon -->
+                <div class="relative flex items-center justify-center">
+                  <div class="absolute w-14 h-14 bg-cyan-400/25 rounded-full blur-lg"></div>
+                  <svg class="w-14 h-14 text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.85)]" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Bottom Progress Bar -->
+              <div class="mt-2.5 flex items-center gap-2">
+                <div class="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                  <div class="w-3/5 h-full bg-gradient-to-r from-cyan-400 via-sky-400 to-purple-500 rounded-full shadow-[0_0_8px_rgba(34,211,238,0.9)]"></div>
+                </div>
+                <span class="w-2 h-2 rounded-full border border-white/40"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Text Content -->
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <span class="text-xs text-zinc-300 font-medium block">Step 01</span>
+              <h3 class="font-['Aleo'] text-lg font-bold text-white mt-1.5 tracking-wide">
+                Import Video
+              </h3>
+              <p class="text-xs text-zinc-300 mt-2 leading-relaxed">
+                Paste a YouTube link or upload an MP4 file.
+              </p>
+            </div>
+
+            <a href="javascript:void(0)" onclick="event.preventDefault(); document.getElementById('hero-input').scrollIntoView({ behavior: 'smooth', block: 'center' });" class="text-xs text-zinc-200 hover:text-white mt-5 inline-flex items-center gap-1.5 font-medium transition-colors cursor-pointer">
+              <span>Start</span>
+              <svg class="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </article>
+
+        <!-- ================================================= -->
+        <!-- STEP 02 (col-span-1): AI Cuts & Styles            -->
+        <!-- ================================================= -->
+        <article class="group col-span-1 bg-[#261F57]/70 border border-white/15 rounded-3xl overflow-hidden flex flex-col justify-between hover:border-zinc-400/50 hover:scale-[1.01] transition-all duration-300 shadow-2xl">
+          <!-- Top Mockup Area -->
+          <div class="relative w-full h-48 bg-[#121024] border-b border-white/10 overflow-hidden flex items-center justify-center p-4">
+            <img src="./images/step-2.png" alt="Step 02 AI Cuts & Styles" class="absolute inset-0 w-full h-full object-cover z-20" onerror="this.style.display='none'" />
+            
+            <!-- Built-in Glowing Audio Waveform Timeline UI matching 370.jpg -->
+            <div class="relative w-full h-full rounded-xl bg-gradient-to-b from-[#191730] to-[#0D0C1D] border border-white/15 p-3 flex flex-col justify-between shadow-[0_0_25px_rgba(236,72,153,0.12)]">
+              <!-- Top Toolbar -->
+              <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+                <div class="flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-zinc-500"></span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-zinc-500"></span>
+                </div>
+                <div class="flex items-center gap-2 text-[7px] text-zinc-400">
+                  <span>⏮</span>
+                  <span class="text-white">▶</span>
+                  <span>⏭</span>
+                </div>
+                <span class="w-3 h-1 bg-white/10 rounded"></span>
+              </div>
+
+              <!-- Center Multi-Color Glowing Waveform Track -->
+              <div class="relative my-auto py-3 px-2 rounded-lg bg-[#090814] border border-white/10 flex items-center justify-between gap-0.5 overflow-hidden">
+                <!-- Left Purple Wave Bars -->
+                <span class="w-1 h-3 bg-purple-500/60 rounded-full"></span>
+                <span class="w-1 h-5 bg-purple-400/80 rounded-full"></span>
+                <span class="w-1 h-7 bg-purple-500 rounded-full"></span>
+                <span class="w-1 h-4 bg-purple-400/70 rounded-full"></span>
+
+                <!-- Highlighted Cyan Segment -->
+                <div class="px-1.5 py-1 bg-cyan-500/20 border-x border-cyan-400 flex items-center gap-0.5">
+                  <span class="w-1 h-6 bg-cyan-300 rounded-full"></span>
+                  <span class="w-1 h-9 bg-cyan-200 rounded-full shadow-[0_0_8px_#22d3ee]"></span>
+                  <span class="w-1 h-5 bg-cyan-300 rounded-full"></span>
+                  <span class="w-1 h-8 bg-cyan-200 rounded-full"></span>
+                </div>
+
+                <!-- Highlighted Pink/Magenta Hook Segment -->
+                <div class="px-1.5 py-1 bg-pink-500/25 border-x border-pink-400 flex items-center gap-0.5">
+                  <span class="w-1 h-8 bg-pink-300 rounded-full"></span>
+                  <span class="w-1 h-10 bg-white rounded-full shadow-[0_0_10px_#f472b6]"></span>
+                  <span class="w-1 h-7 bg-pink-300 rounded-full"></span>
+                </div>
+
+                <!-- Right Blue Wave Bars -->
+                <span class="w-1 h-6 bg-sky-400/80 rounded-full"></span>
+                <span class="w-1 h-8 bg-sky-300 rounded-full"></span>
+                <span class="w-1 h-4 bg-sky-500/60 rounded-full"></span>
+                <span class="w-1 h-5 bg-sky-400/70 rounded-full"></span>
+
+                <!-- Vertical Glowing Playhead Lasers -->
+                <div class="absolute top-0 bottom-0 left-[42%] w-0.5 bg-cyan-300 shadow-[0_0_10px_#22d3ee]"></div>
+                <div class="absolute top-0 bottom-0 left-[63%] w-0.5 bg-pink-400 shadow-[0_0_10px_#f472b6]"></div>
+              </div>
+
+              <!-- Bottom Scissors / Cut Markers -->
+              <div class="flex items-center justify-around text-[8px] text-cyan-300/80">
+                <span>✂</span>
+                <span class="text-pink-400">✂</span>
+                <span>✂</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Text Content -->
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <span class="text-xs text-zinc-300 font-medium block">Step 02</span>
+              <h3 class="font-['Aleo'] text-lg font-bold text-white mt-1.5 tracking-wide">
+                AI Cuts &amp; Styles
+              </h3>
+              <p class="text-xs text-zinc-300 mt-2 leading-relaxed">
+                The algorithm spots hooks, generates titles, and applies templates.
+              </p>
+            </div>
+
+            <a href="javascript:void(0)" class="text-xs text-zinc-200 hover:text-white mt-5 inline-flex items-center gap-1.5 font-medium transition-colors">
+              <span>Learn more</span>
+              <svg class="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </article>
+
+        <!-- ================================================= -->
+        <!-- STEP 03 (md:col-span-2 lg:col-span-2): Wide Card  -->
+        <!-- ================================================= -->
+        <article class="group md:col-span-2 lg:col-span-2 bg-[#261F57]/70 border border-white/15 rounded-3xl overflow-hidden flex flex-col sm:flex-row items-stretch justify-between hover:border-zinc-400/50 hover:scale-[1.01] transition-all duration-300 shadow-2xl">
+          
+          <!-- Left Side (58% width): Isometric 3D Smartphone with Floating Neon Layers -->
+          <div class="relative w-full sm:w-[58%] min-h-[250px] sm:min-h-full bg-[#131126] overflow-hidden flex items-center justify-center p-4">
+            <img src="./images/step-3.png" alt="Step 03 Publish & Go Viral" class="absolute inset-0 w-full h-full object-cover z-20" onerror="this.style.display='none'" />
+            
+            <!-- Built-in Isometric 3D Smartphone + Holographic Layers matching 370.jpg -->
+            <div class="relative w-full h-full flex items-center justify-center">
+              <!-- Ambient Neon Glows -->
+              <div class="absolute w-44 h-44 bg-purple-600/30 rounded-full blur-2xl"></div>
+              <div class="absolute right-6 bottom-6 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl"></div>
+
+              <!-- Isometric Tilted Smartphone Base -->
+              <div class="relative w-56 h-36 rounded-[26px] bg-gradient-to-br from-zinc-800 via-zinc-900 to-black p-1.5 shadow-[0_25px_50px_rgba(0,0,0,0.9)] border border-white/25 transform -rotate-[28deg] skew-x-[18deg] scale-95">
+                <div class="w-full h-full rounded-[20px] bg-[#0B0D19] border border-white/10 p-3 flex flex-col justify-between overflow-hidden">
+                  <!-- Top Speaker Notch -->
+                  <div class="w-10 h-1.5 bg-black rounded-full mx-auto border border-white/10"></div>
+                  <!-- Screen UI Elements -->
+                  <div class="space-y-1.5 my-auto">
+                    <div class="h-3 w-3/4 bg-white/10 rounded-full"></div>
+                    <div class="h-8 w-full bg-indigo-500/20 border border-indigo-400/30 rounded-lg"></div>
+                  </div>
+                  <!-- Bottom Nav Icons -->
+                  <div class="flex justify-around text-[8px] text-zinc-400 pt-1 border-t border-white/10">
+                    <span>⌂</span><span>✉</span><span>⚙</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Floating Holographic Layer 1: Left Purple/Pink Wave Graph Card -->
+              <div class="absolute left-3 top-1/2 -translate-y-4 w-32 h-24 rounded-2xl bg-gradient-to-br from-purple-500/35 to-indigo-900/60 backdrop-blur-md border border-purple-300/50 p-2.5 shadow-[0_12px_30px_rgba(168,85,247,0.4)] transform -rotate-[22deg] skew-x-[14deg]">
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-[7px] text-purple-200 font-bold">VIRAL CURVE</span>
+                  <span class="text-[7px] text-emerald-300 font-bold">↗ 98%</span>
+                </div>
+                <svg class="w-full h-12" viewBox="0 0 100 40">
+                  <path d="M5 32 Q 25 10, 45 25 T 95 6" fill="none" stroke="#F0ABFC" stroke-width="3" />
+                </svg>
+              </div>
+
+              <!-- Floating Holographic Layer 2: Top Cyan Checkmark Pill -->
+              <div class="absolute top-6 left-1/2 -translate-x-4 px-3 py-1.5 rounded-xl bg-cyan-400/25 backdrop-blur-md border border-cyan-300/60 shadow-[0_0_20px_rgba(34,211,238,0.5)] transform -rotate-[22deg] skew-x-[14deg] flex items-center gap-2">
+                <span class="w-3.5 h-3.5 rounded-full bg-cyan-300 text-black text-[8px] font-black flex items-center justify-center">✓</span>
+                <div class="w-10 h-1.5 bg-cyan-200/80 rounded-full"></div>
+              </div>
+
+              <!-- Floating Holographic Layer 3: Bottom-Right Green/Cyan Status Card -->
+              <div class="absolute right-3 bottom-5 w-32 h-20 rounded-2xl bg-gradient-to-br from-cyan-500/30 to-emerald-900/50 backdrop-blur-md border border-emerald-300/50 p-2.5 shadow-[0_12px_30px_rgba(16,185,129,0.35)] transform -rotate-[22deg] skew-x-[14deg] flex flex-col justify-between">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-3.5 h-3.5 rounded-full bg-emerald-400 text-black text-[8px] font-bold flex items-center justify-center">✓</span>
+                  <div class="flex-1 h-1.5 bg-emerald-300 rounded-full"></div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="w-3.5 h-3.5 rounded-full bg-cyan-400 text-black text-[8px] font-bold flex items-center justify-center">✓</span>
+                  <div class="w-3/4 h-1.5 bg-cyan-300 rounded-full"></div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="w-3.5 h-3.5 rounded-full bg-purple-400 text-black text-[8px] font-bold flex items-center justify-center">✓</span>
+                  <div class="w-1/2 h-1.5 bg-purple-300 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side (42% width): Step 03 Text Column -->
+          <div class="w-full sm:w-[42%] p-6 sm:p-7 flex flex-col justify-center border-t sm:border-t-0 sm:border-l border-white/10">
+            <span class="text-xs text-zinc-300 font-medium block">Step 03</span>
+            <h3 class="font-['Aleo'] text-lg sm:text-xl font-bold text-white mt-1.5 tracking-wide">
+              Publish &amp; Go Viral
+            </h3>
+            <p class="text-xs text-zinc-300 mt-2.5 leading-relaxed">
+              Export in 4K or schedule directly to social accounts.
+            </p>
+            <a href="javascript:void(0)" class="text-xs text-zinc-200 hover:text-white mt-5 inline-flex items-center gap-1.5 font-medium transition-colors">
+              <span>Learn more</span>
+              <svg class="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- 6. COMPARISON SECTION: "Before and after" (SCREENSHOT 14) -->
+  <!-- ========================================================= -->
+  <section id="comparison" class="w-full bg-[#020205] relative z-20 py-24 px-4 border-t border-white/5">
+    <div class="max-w-5xl mx-auto text-center">
+      
+      <!-- Top Purple-Blue Badge -->
+      <span class="bg-[#6D42F6] border border-[#8B5CF6]/40 text-white text-xs px-4 py-1.5 rounded-xl inline-block mb-4 font-['Aleo'] shadow-lg shadow-[#6D42F6]/25">
+        Comparison
+      </span>
+
+      <!-- Section Heading H2 -->
+      <h2 class="font-['Aleo'] tracking-wide text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3">
+        Before and after
+      </h2>
+
+      <!-- Section Subtitle -->
+      <p class="font-['Aleo'] tracking-wide text-zinc-200 text-sm sm:text-base mb-14 max-w-xl mx-auto">
+        The difference between manual editing and Klipso AI.
+      </p>
+
+      <!-- Two-Column Comparison Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto text-left">
+
+        <!-- ================================================= -->
+        <!-- LEFT CARD: "Without Klipso"                       -->
+        <!-- ================================================= -->
+        <div class="bg-[#090910] border border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:border-white/20">
+          <div>
+            <!-- Top Mockup: Gray Desktop Video Editor Interface -->
+            <div class="relative w-full h-52 sm:h-56 rounded-2xl overflow-hidden bg-[#161822] border border-white/10 p-3 flex flex-col justify-between">
+              <img src="./images/compare-before.png" alt="Without Klipso Manual Editor" class="absolute inset-0 w-full h-full object-cover z-20" onerror="this.style.display='none'" />
+              
+              <!-- Built-in Gray Desktop NLE Interface Fallback matching 14.jpg -->
+              <div class="w-full h-full bg-[#1C1F2B] rounded-lg border border-white/5 p-2 flex flex-col justify-between text-[7px] text-zinc-500">
+                <!-- Top Menu Bar -->
+                <div class="flex items-center justify-between border-b border-white/5 pb-1">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-zinc-600"></span>
+                    <span class="w-2 h-2 rounded-full bg-zinc-600"></span>
+                    <span class="w-2 h-2 rounded-full bg-zinc-600"></span>
+                  </div>
+                  <span>Project_Raw_Podcast_v14.prproj</span>
+                  <span>16:9</span>
+                </div>
+
+                <!-- Middle Panels: Bins + 16:9 Flat Monitor + Inspector -->
+                <div class="grid grid-cols-12 gap-1.5 my-1 flex-1">
+                  <div class="col-span-3 bg-[#13151E] rounded p-1 space-y-1">
+                    <div class="h-2 bg-zinc-700/60 rounded w-3/4"></div>
+                    <div class="grid grid-cols-2 gap-1">
+                      <div class="h-4 bg-zinc-700/40 rounded"></div>
+                      <div class="h-4 bg-zinc-700/40 rounded"></div>
+                      <div class="h-4 bg-zinc-700/40 rounded"></div>
+                      <div class="h-4 bg-zinc-700/40 rounded"></div>
+                    </div>
+                  </div>
+                  <div class="col-span-6 bg-[#0E1017] rounded flex items-center justify-center relative overflow-hidden">
+                    <div class="w-4/5 h-3/4 bg-zinc-800 rounded flex items-center justify-center">
+                      <div class="w-8 h-8 rounded-full bg-zinc-700"></div>
+                    </div>
+                  </div>
+                  <div class="col-span-3 bg-[#13151E] rounded p-1 space-y-1">
+                    <div class="h-2 bg-zinc-700/50 rounded"></div>
+                    <div class="h-1.5 bg-zinc-700/30 rounded"></div>
+                    <div class="h-1.5 bg-zinc-700/30 rounded"></div>
+                  </div>
+                </div>
+
+                <!-- Bottom Multi-Track Manual Timeline -->
+                <div class="h-14 bg-[#12141C] rounded p-1.5 space-y-1 border-t border-white/5">
+                  <div class="flex gap-1">
+                    <div class="w-1/4 h-2 bg-zinc-600/50 rounded-xs"></div>
+                    <div class="w-1/3 h-2 bg-indigo-900/40 rounded-xs"></div>
+                    <div class="w-1/4 h-2 bg-zinc-600/50 rounded-xs"></div>
+                  </div>
+                  <div class="flex gap-1">
+                    <div class="w-2/3 h-2 bg-teal-900/40 rounded-xs"></div>
+                    <div class="w-1/4 h-2 bg-teal-900/40 rounded-xs"></div>
+                  </div>
+                  <div class="w-full h-2 bg-zinc-700/40 rounded-xs"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Heading & Subtitle -->
+            <h3 class="font-['Aleo'] text-xl font-bold text-zinc-300 mt-6 text-center tracking-wide">
+              Without Klipso
+            </h3>
+            <p class="font-['Aleo'] text-xs text-zinc-400 text-center max-w-xs mx-auto mt-2 mb-6 leading-relaxed">
+              Raw 16:9 podcast footage, flat pacing, hours of manual editing.
+            </p>
+
+            <!-- Parameters Table -->
+            <div class="border-t border-indigo-500/20">
+              <div class="border-b border-indigo-500/20 py-3.5 flex justify-between items-center text-xs sm:text-sm text-zinc-400">
+                <span>Format</span>
+                <span class="font-['Aleo'] text-zinc-300 font-bold text-base">16:9</span>
+              </div>
+              <div class="border-b border-indigo-500/20 py-3.5 flex justify-between items-center text-xs sm:text-sm text-zinc-400">
+                <span>Captions</span>
+                <span class="font-['Aleo'] text-zinc-300 font-bold text-base">None</span>
+              </div>
+              <div class="border-b border-indigo-500/20 py-3.5 flex justify-between items-center text-xs sm:text-sm text-zinc-400">
+                <span>Retention</span>
+                <span class="font-['Aleo'] text-zinc-300 font-bold text-base">49%</span>
+              </div>
+              <div class="border-b border-indigo-500/20 py-3.5 flex justify-between items-center text-xs sm:text-sm text-zinc-400">
+                <span>Music</span>
+                <span class="font-['Aleo'] text-zinc-300 font-bold text-base">N/A</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Checklist at Bottom -->
+          <ul class="space-y-3 mt-6 text-xs text-zinc-400">
+            <li class="flex items-center gap-3">
+              <span class="text-zinc-400 font-bold">✓</span>
+              <span>Flat pacing</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="text-zinc-400 font-bold">✓</span>
+              <span>Manual editing</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="text-zinc-500 font-bold">✕</span>
+              <span>No hooks</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="text-zinc-500 font-bold">✕</span>
+              <span>Hours lost</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ================================================= -->
+        <!-- RIGHT CARD: "With Klipso"                         -->
+        <!-- ================================================= -->
+        <div class="bg-[#0B0A14] border border-purple-500/25 shadow-[0_0_40px_rgba(109,66,246,0.08)] rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:border-purple-400/40">
+          <div>
+            <!-- Top Mockup: Glowing 3D Isometric Smartphone with Neon Layers -->
+            <div class="relative w-full h-52 sm:h-56 rounded-2xl overflow-hidden bg-[#141129] border border-white/10 p-3 flex items-center justify-center">
+              <img src="./images/compare-after.png" alt="With Klipso AI Viral Output" class="absolute inset-0 w-full h-full object-cover z-20" onerror="this.style.display='none'" />
+              
+              <!-- Built-in Glowing 3D Smartphone & Neon Layers matching 14.jpg -->
+              <div class="relative w-full h-full flex items-center justify-center">
+                <div class="absolute w-40 h-40 bg-purple-600/35 rounded-full blur-2xl"></div>
+                <div class="absolute right-8 bottom-4 w-28 h-28 bg-cyan-500/25 rounded-full blur-2xl"></div>
+
+                <!-- Tilted 3D Phone -->
+                <div class="relative w-48 h-32 rounded-[22px] bg-gradient-to-br from-zinc-700 via-zinc-900 to-black p-1.5 shadow-2xl border border-white/25 transform -rotate-[25deg] skew-x-[16deg]">
+                  <div class="w-full h-full rounded-[17px] bg-[#0B0D19] border border-white/10 p-2.5 flex flex-col justify-between">
+                    <div class="w-8 h-1 bg-black rounded-full mx-auto"></div>
+                    <div class="h-6 w-full bg-purple-500/20 border border-purple-400/30 rounded"></div>
+                    <div class="flex justify-around text-[7px] text-zinc-400">
+                      <span>⌂</span><span>✉</span><span>⚙</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Floating Neon Wave Card -->
+                <div class="absolute left-6 top-1/2 -translate-y-4 w-28 h-20 rounded-xl bg-purple-500/30 backdrop-blur-md border border-purple-300/60 p-2 shadow-[0_10px_25px_rgba(168,85,247,0.45)] transform -rotate-[20deg] skew-x-[14deg]">
+                  <svg class="w-full h-full" viewBox="0 0 100 40">
+                    <path d="M5 30 Q 25 8, 50 22 T 95 6" fill="none" stroke="#E879F9" stroke-width="3.5" />
+                  </svg>
+                </div>
+
+                <!-- Floating Neon Checkmark Card -->
+                <div class="absolute right-6 bottom-5 w-28 h-16 rounded-xl bg-cyan-500/25 backdrop-blur-md border border-emerald-300/60 p-2 shadow-[0_10px_25px_rgba(16,185,129,0.35)] transform -rotate-[20deg] skew-x-[14deg] flex flex-col justify-around">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-3 h-3 rounded-full bg-emerald-400 text-black text-[7px] font-bold flex items-center justify-center">✓</span>
+                    <div class="flex-1 h-1.5 bg-emerald-300 rounded-full"></div>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-3 h-3 rounded-full bg-cyan-400 text-black text-[7px] font-bold flex items-center justify-center">✓</span>
+                    <div class="w-2/3 h-1.5 bg-cyan-300 rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Heading & Subtitle -->
+            <h3 class="font-['Aleo'] text-xl font-bold text-white mt-6 text-center tracking-wide">
+              With Klipso
+            </h3>
+            <p class="font-['Aleo'] text-xs text-zinc-200 text-center max-w-xs mx-auto mt-2 mb-6 leading-relaxed">
+              Vertical 9:16 format, kinetic subtitles, background music, hooked intro.
+            </p>
+
+            <!-- Parameters Table -->
+            <div class="border-t border-indigo-500/25">
+              <div class="border-b border-indigo-500/25 py-3.5 flex justify-between items-center text-xs sm:text-sm text-zinc-200">
+                <span>Format</span>
+                <span class="font-['Aleo'] text-white font-bold text-base">9:16</span>
+              </div>
+              <div class="border-b border-indigo-500/25 py-3.5 flex justify-between items-center text-xs sm:text-sm text-zinc-200">
+                <span>Captions</span>
+                <span class="font-['Aleo'] text-white font-bold text-base">Unlimited</span>
+              </div>
+              <div class="border-b border-indigo-500/25 py-3.5 flex justify-between items-center text-xs sm:text-sm text-zinc-200">
+                <span>Retention</span>
+                <span class="font-['Aleo'] text-white font-bold text-base">90%</span>
+              </div>
+              <div class="border-b border-indigo-500/25 py-3.5 flex justify-between items-center text-xs sm:text-sm text-zinc-200">
+                <span>Music</span>
+                <span class="font-['Aleo'] text-white font-bold text-base">+100</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Checklist at Bottom -->
+          <ul class="space-y-3 mt-6 text-xs text-zinc-200">
+            <li class="flex items-center gap-3">
+              <span class="text-white font-bold">✓</span>
+              <span>Kinetic subtitles</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="text-white font-bold">✓</span>
+              <span>AI cuts</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="text-white font-bold">✓</span>
+              <span>Hooked intro</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="text-white font-bold">✓</span>
+              <span>Seconds saved</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- 7. PRICING SECTION: "Pricing plan" (SCREENSHOT 20.PNG)    -->
+  <!-- ========================================================= -->
+  <section id="pricing" class="w-full bg-[#151421] relative z-20 border-t border-white/5">
+    <div class="max-w-6xl mx-auto px-4 py-24 text-center">
+      
+      <!-- Top Dark-Purple Badge -->
+      <span class="bg-[#1E1938] text-[#A78BFA] border border-[#6D42F6]/30 text-xs px-3.5 py-1 rounded-full inline-block mb-3 font-['Aleo'] shadow-sm">
+        Pricing
+      </span>
+
+      <!-- Section Heading H2 -->
+      <h2 class="font-['Aleo'] tracking-wide text-4xl sm:text-5xl font-bold text-white mb-3">
+        Pricing plan
+      </h2>
+
+      <!-- Section Subtitle -->
+      <p class="font-['Aleo'] tracking-wide text-zinc-300 text-sm sm:text-base mb-16 max-w-xl mx-auto">
+        Start free, upgrade when you need more minutes and 4K.
+      </p>
+
+      <!-- 3-Card Pricing Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch text-left">
+
+        <!-- ================================================= -->
+        <!-- CARD 1: START ($17/mo)                            -->
+        <!-- ================================================= -->
+        <div class="bg-[#100F1E] border border-[#6C5CE7]/35 hover:border-[#6C5CE7]/70 rounded-[28px] p-8 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+          <div>
+            <!-- Plan Header -->
+            <div>
+              <h3 class="font-['Aleo'] tracking-wide text-white font-bold text-lg">Start</h3>
+              <p class="text-xs text-zinc-400 mt-1">For trying Klipso AI.</p>
+            </div>
+
+            <!-- Divider -->
+            <div class="border-b border-white/5 my-6"></div>
+
+            <!-- Price -->
+            <div>
+              <div class="font-['Aleo'] tracking-wide text-5xl font-bold text-white">$17/mo</div>
+              <p class="text-xs text-zinc-400 mt-2">Billed yearly</p>
+            </div>
+
+            <!-- Action Button -->
+            <button 
+              type="button"
+              onclick="document.getElementById('hero-input').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => document.getElementById('hero-input').focus(), 500);"
+              class="w-full py-3 rounded-full border border-white/20 text-white text-sm font-medium hover:bg-white/5 active:scale-[0.98] transition-all mt-6 cursor-pointer"
+            >
+              Get started
+            </button>
+
+            <!-- Divider -->
+            <div class="border-b border-white/5 my-6"></div>
+
+            <!-- Feature Checklist -->
+            <ul class="space-y-3.5 text-xs sm:text-sm text-zinc-300">
+              <li class="flex items-center gap-3">
+                <span class="text-zinc-300 font-bold">✓</span>
+                <span>60 mins processing</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="text-zinc-300 font-bold">✓</span>
+                <span>720p export</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="text-zinc-300 font-bold">✓</span>
+                <span>Klipso watermark</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ================================================= -->
+        <!-- CARD 2: PRO ($39/mo - Purple Gradient & Glow)     -->
+        <!-- ================================================= -->
+        <div class="bg-gradient-to-b from-[#2B1F54] via-[#1B1537] to-[#110E24] border border-[#6C5CE7]/35 hover:border-[#6C5CE7]/70 shadow-[0_0_50px_rgba(108,92,231,0.25)] hover:shadow-[0_0_60px_rgba(108,92,231,0.4)] rounded-[28px] p-8 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2">
+          <div>
+            <!-- Plan Header + Popular Badge -->
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <h3 class="font-['Aleo'] tracking-wide text-white font-bold text-lg">Pro</h3>
+                <p class="text-xs text-zinc-400 mt-1">For serious creators.</p>
+              </div>
+              <span class="bg-[#6C5CE7] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-md shrink-0">
+                Popular
+              </span>
+            </div>
+
+            <!-- Divider -->
+            <div class="border-b border-white/10 my-6"></div>
+
+            <!-- Price -->
+            <div>
+              <div class="font-['Aleo'] tracking-wide text-5xl font-bold text-white">$39/mo</div>
+              <p class="text-xs text-zinc-400 mt-2">Billed yearly</p>
+            </div>
+
+            <!-- Gradient Action Button -->
+            <button 
+              type="button"
+              onclick="document.getElementById('hero-input').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => document.getElementById('hero-input').focus(), 500);"
+              class="w-full py-3 rounded-full bg-gradient-to-r from-[#6C5CE7] to-[#5138EE] hover:opacity-90 active:scale-[0.98] text-white text-sm font-semibold shadow-lg shadow-purple-900/30 transition-all mt-6 cursor-pointer"
+            >
+              Get started
+            </button>
+
+            <!-- Divider -->
+            <div class="border-b border-white/10 my-6"></div>
+
+            <!-- Feature Checklist -->
+            <ul class="space-y-3.5 text-xs sm:text-sm text-zinc-200">
+              <li class="flex items-center gap-3">
+                <span class="text-white font-bold">✓</span>
+                <span>300 mins processing</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="text-white font-bold">✓</span>
+                <span>4K export</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="text-white font-bold">✓</span>
+                <span>No watermark</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="text-white font-bold">✓</span>
+                <span>Custom subtitle presets</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ================================================= -->
+        <!-- CARD 3: ULTRA ($89/mo)                            -->
+        <!-- ================================================= -->
+        <div class="bg-[#100F1E] border border-[#6C5CE7]/35 hover:border-[#6C5CE7]/70 rounded-[28px] p-8 flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+          <div>
+            <!-- Plan Header -->
+            <div>
+              <h3 class="font-['Aleo'] tracking-wide text-white font-bold text-lg">Ultra</h3>
+              <p class="text-xs text-zinc-400 mt-1">For teams and media agencies.</p>
+            </div>
+
+            <!-- Divider -->
+            <div class="border-b border-white/5 my-6"></div>
+
+            <!-- Price -->
+            <div>
+              <div class="font-['Aleo'] tracking-wide text-5xl font-bold text-white">$89/mo</div>
+              <p class="text-xs text-zinc-400 mt-2">Billed yearly</p>
+            </div>
+
+            <!-- Action Button -->
+            <button 
+              type="button"
+              onclick="document.getElementById('hero-input').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => document.getElementById('hero-input').focus(), 500);"
+              class="w-full py-3 rounded-full border border-white/20 text-white text-sm font-medium hover:bg-white/5 active:scale-[0.98] transition-all mt-6 cursor-pointer"
+            >
+              Get started
+            </button>
+
+            <!-- Divider -->
+            <div class="border-b border-white/5 my-6"></div>
+
+            <!-- Feature Checklist -->
+            <ul class="space-y-3.5 text-xs sm:text-sm text-zinc-300">
+              <li class="flex items-center gap-3">
+                <span class="text-zinc-300 font-bold">✓</span>
+                <span>Unlimited minutes</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="text-zinc-300 font-bold">✓</span>
+                <span>API access</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="text-zinc-300 font-bold">✓</span>
+                <span>Team collaboration</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="text-zinc-300 font-bold">✓</span>
+                <span>Dedicated rendering queue</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="text-zinc-300 font-bold">✓</span>
+                <span>Priority support</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- 8. FAQS SECTION (SCREENSHOT 5.PNG)                        -->
+  <!-- ========================================================= -->
+  <section id="faq" class="w-full bg-[#1C1C1C] relative z-20 py-24 px-4 border-t border-white/5">
+    <div class="max-w-4xl mx-auto text-left">
+      
+      <!-- Heading H2 -->
+      <h2 class="font-['Aleo'] tracking-wide text-4xl sm:text-5xl font-bold text-white mb-3 text-left max-w-4xl mx-auto">
+        FAQs
+      </h2>
+
+      <!-- Subtitle -->
+      <p class="font-['Aleo'] tracking-wide text-zinc-300 text-sm mb-10 text-left max-w-4xl mx-auto">
+        Answers about video limits, copyright, subtitles, and refunds.
+      </p>
+
+      <!-- Interactive Accordion List -->
+      <div id="faqAccordion" class="max-w-4xl mx-auto space-y-4">
+
+        <!-- FAQ Item 1 -->
+        <div class="faq-item bg-[#262626]/90 border border-white/10 hover:border-white/20 rounded-2xl p-6 transition-all cursor-pointer">
+          <div class="flex items-center justify-between gap-4">
+            <h3 class="font-['Aleo'] tracking-wide text-base sm:text-lg font-bold text-white">
+              What video length works?
+            </h3>
+            <span class="faq-icon text-zinc-300 text-lg leading-none select-none transition-transform duration-300">✕</span>
+          </div>
+          <p class="faq-answer font-['Aleo'] text-sm text-zinc-300 mt-3 leading-relaxed max-w-2xl">
+            Klipso AI handles videos up to three hours long. The AI scans the full file and extracts only the highest-retention moments for your clips.
+          </p>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="faq-item bg-[#262626]/90 border border-white/10 hover:border-white/20 rounded-2xl p-6 transition-all cursor-pointer">
+          <div class="flex items-center justify-between gap-4">
+            <h3 class="font-['Aleo'] tracking-wide text-base sm:text-lg font-bold text-white">
+              Is it copyright safe?
+            </h3>
+            <span class="faq-icon text-zinc-300 text-lg leading-none select-none transition-transform duration-300">✕</span>
+          </div>
+          <p class="faq-answer font-['Aleo'] text-sm text-zinc-300 mt-3 leading-relaxed max-w-2xl">
+            You keep full ownership of your content. Klipso AI only repurposes videos you upload or link from your own channel.
+          </p>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="faq-item bg-[#262626]/90 border border-white/10 hover:border-white/20 rounded-2xl p-6 transition-all cursor-pointer">
+          <div class="flex items-center justify-between gap-4">
+            <h3 class="font-['Aleo'] tracking-wide text-base sm:text-lg font-bold text-white">
+              Which subtitle languages?
+            </h3>
+            <span class="faq-icon text-zinc-300 text-lg leading-none select-none transition-transform duration-300">✕</span>
+          </div>
+          <p class="faq-answer font-['Aleo'] text-sm text-zinc-300 mt-3 leading-relaxed max-w-2xl">
+            Klipso AI supports 30+ languages for karaoke captions. The AI transcribes and styles subtitles in the language you choose.
+          </p>
+        </div>
+
+        <!-- FAQ Item 4 -->
+        <div class="faq-item bg-[#262626]/90 border border-white/10 hover:border-white/20 rounded-2xl p-6 transition-all cursor-pointer">
+          <div class="flex items-center justify-between gap-4">
+            <h3 class="font-['Aleo'] tracking-wide text-base sm:text-lg font-bold text-white">
+              What is the refund policy?
+            </h3>
+            <span class="faq-icon text-zinc-300 text-lg leading-none select-none transition-transform duration-300">✕</span>
+          </div>
+          <p class="faq-answer font-['Aleo'] text-sm text-zinc-300 mt-3 leading-relaxed max-w-2xl">
+            We offer a 14-day money-back guarantee on Pro and Agency plans. If Klipso AI does not work for you, contact support for a full refund.
+          </p>
+        </div>
+
+        <!-- FAQ Item 5 -->
+        <div class="faq-item bg-[#262626]/90 border border-white/10 hover:border-white/20 rounded-2xl p-6 transition-all cursor-pointer">
+          <div class="flex items-center justify-between gap-4">
+            <h3 class="font-['Aleo'] tracking-wide text-base sm:text-lg font-bold text-white">
+              Can I cancel anytime?
+            </h3>
+            <span class="faq-icon text-zinc-300 text-lg leading-none select-none transition-transform duration-300">✕</span>
+          </div>
+          <p class="faq-answer font-['Aleo'] text-sm text-zinc-300 mt-3 leading-relaxed max-w-2xl">
+            Yes. Cancel your subscription in one click from your account settings. You keep access until the end of the billing period.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Still Have Questions Block -->
+      <div class="max-w-4xl mx-auto mt-12">
+        <h3 class="font-['Aleo'] tracking-wide text-2xl font-bold text-white mb-2">
+          Still have questions?
+        </h3>
+        <p class="font-['Aleo'] text-zinc-300 text-sm mb-5">
+          Contact our support team for help with Klipso AI.
+        </p>
+        <a 
+          href="mailto:email@example.com" 
+          class="border border-white/30 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-white/10 active:scale-95 transition-all inline-block"
+        >
+          Contact
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- 9. FOOTER SECTION (SCREENSHOT 11.PNG)                     -->
+  <!-- ========================================================= -->
+  <footer class="w-full bg-[#000000] relative z-20 pt-6 pb-4 px-4 border-t border-white/5">
+    
+    <!-- Outer Rounded Footer Card -->
+    <div class="max-w-6xl mx-auto border border-white/10 rounded-[36px] bg-[#0E0D1A] p-8 md:p-12 mb-8 mt-16">
+      <div class="flex flex-col md:flex-row justify-between gap-10">
+        
+        <!-- Left Column: Logo, Address, Contact, Socials -->
+        <div class="space-y-6">
+          <!-- Klipso Logo Icon -->
+          <a href="javascript:void(0)" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="inline-flex items-center gap-3 group focus:outline-none">
+            <svg class="w-9 h-9 text-white transition-transform duration-200 group-hover:scale-105" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="4" width="6.5" height="30" rx="3.25" fill="currentColor"/>
+              <path d="M12.5 19L25.5 7.5V15.2L17.8 19L25.5 22.8V30.5L12.5 19Z" fill="currentColor"/>
+              <circle cx="26.5" cy="19" r="3.6" fill="currentColor"/>
+              <path d="M25.6 17.5L28.3 19L25.6 20.5V17.5Z" fill="#050508"/>
+            </svg>
+          </a>
+
+          <!-- Address Block -->
+          <div class="text-xs space-y-1 mt-6">
+            <div class="text-white font-semibold">Address</div>
+            <div class="text-zinc-300">Level 1, 12 Sample St, Sydney NSW 2000</div>
+          </div>
+
+          <!-- Contact Block -->
+          <div class="text-xs space-y-1">
+            <div class="text-white font-semibold">Contact</div>
+            <div>
+              <a href="tel:18001234567" class="text-zinc-300 hover:text-white underline transition-colors">1800 123 4567</a>
+            </div>
+            <div>
+              <a href="mailto:email@example.com" class="text-zinc-300 hover:text-white underline transition-colors">email@example.com</a>
+            </div>
+          </div>
+
+          <!-- Social Media Icons (Facebook, Instagram, X, LinkedIn, YouTube) -->
+          <div class="flex items-center gap-4 pt-2 text-white">
+            <!-- Facebook -->
+            <a href="javascript:void(0)" aria-label="Facebook" class="hover:text-zinc-300 transition-colors">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+              </svg>
+            </a>
+            <!-- Instagram -->
+            <a href="javascript:void(0)" aria-label="Instagram" class="hover:text-zinc-300 transition-colors">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </a>
+            <!-- X -->
+            <a href="javascript:void(0)" aria-label="X" class="hover:text-zinc-300 transition-colors">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+            <!-- LinkedIn -->
+            <a href="javascript:void(0)" aria-label="LinkedIn" class="hover:text-zinc-300 transition-colors">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+              </svg>
+            </a>
+            <!-- YouTube -->
+            <a href="javascript:void(0)" aria-label="YouTube" class="hover:text-zinc-300 transition-colors">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Menu Columns -->
+        <div class="flex gap-16 sm:gap-24 text-xs sm:text-sm font-semibold text-white md:pr-12">
+          <!-- Column 1 -->
+          <ul class="space-y-4">
+            <li><a href="javascript:void(0)" onclick="document.getElementById('features').scrollIntoView({ behavior: 'smooth' })" class="hover:text-zinc-300 transition-colors">Features</a></li>
+            <li><a href="javascript:void(0)" onclick="document.getElementById('process').scrollIntoView({ behavior: 'smooth' })" class="hover:text-zinc-300 transition-colors">How It Works</a></li>
+            <li><a href="javascript:void(0)" onclick="document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' })" class="hover:text-zinc-300 transition-colors">Pricing</a></li>
+            <li><a href="javascript:void(0)" onclick="document.getElementById('faq').scrollIntoView({ behavior: 'smooth' })" class="hover:text-zinc-300 transition-colors">FAQ</a></li>
+            <li><a href="javascript:void(0)" class="hover:text-zinc-300 transition-colors">Blog</a></li>
+          </ul>
+
+          <!-- Column 2 -->
+          <ul class="space-y-4">
+            <li><a href="javascript:void(0)" class="hover:text-zinc-300 transition-colors">Careers</a></li>
+            <li><a href="mailto:email@example.com" class="hover:text-zinc-300 transition-colors">Contact</a></li>
+            <li><a href="javascript:void(0)" class="hover:text-zinc-300 transition-colors">Help Center</a></li>
+            <li><a href="javascript:void(0)" class="hover:text-zinc-300 transition-colors">API Docs</a></li>
+            <li><a href="javascript:void(0)" class="hover:text-zinc-300 transition-colors">Status</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom Legal Bar Outside Card -->
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-zinc-400 max-w-6xl mx-auto px-4 pb-12">
+      <div>© 2025 Klipso AI. All rights reserved.</div>
+      <div class="flex items-center gap-6">
+        <a href="javascript:void(0)" class="underline hover:text-zinc-200 transition-colors">Privacy Policy</a>
+        <a href="javascript:void(0)" class="underline hover:text-zinc-200 transition-colors">Terms of Service</a>
+        <a href="javascript:void(0)" class="underline hover:text-zinc-200 transition-colors">Cookies Settings</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- ========================================================= -->
+  <!-- 10. JAVASCRIPT: SCROLL NAVBAR, GENERATE & FAQ ACCORDION   -->
+  <!-- ========================================================= -->
+  <script>
+    (function () {
+      // 1. Dynamic Navbar on Scroll
+      const navbar = document.getElementById('navbar');
+
+      function handleScroll() {
+        if (window.scrollY > 20) {
+          navbar.classList.remove('bg-transparent');
+          navbar.classList.add(
+            'bg-[#0B0A16]/90',
+            'backdrop-blur-md',
+            'border-b',
+            'border-white/10',
+            'shadow-lg'
+          );
+        } else {
+          navbar.classList.add('bg-transparent');
+          navbar.classList.remove(
+            'bg-[#0B0A16]/90',
+            'backdrop-blur-md',
+            'border-b',
+            'border-white/10',
+            'shadow-lg'
+          );
+        }
+      }
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      handleScroll();
+
+      // 2. Interactive Generate Button Handler
+      const form = document.getElementById('generateForm');
+      const input = document.getElementById('hero-input');
+      const generateBtn = document.getElementById('generate-btn');
+      const generateSpinner = document.getElementById('generateSpinner');
+      const generateBtnText = document.getElementById('generateBtnText');
+      const toast = document.getElementById('statusToast');
+      const statusText = document.getElementById('statusText');
+      const closeToastBtn = document.getElementById('closeToastBtn');
+
+      let processingTimer = null;
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (generateBtn.disabled) return;
+
+        clearTimeout(processingTimer);
+        toast.classList.add('hidden');
+
+        const urlVal = input.value.trim() || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+        input.value = urlVal;
+
+        input.disabled = true;
+        generateBtn.disabled = true;
+        generateSpinner.classList.remove('hidden');
+        generateBtnText.textContent = 'Processing...';
+
+        processingTimer = setTimeout(function () {
+          input.disabled = false;
+          generateBtn.disabled = false;
+          generateSpinner.classList.add('hidden');
+          generateBtnText.textContent = 'Generate';
+
+          statusText.textContent = '10 viral shorts generated from your YouTube link! Ready to preview & export.';
+          toast.classList.remove('hidden');
+        }, 2000);
+      });
+
+      closeToastBtn.addEventListener('click', function () {
+        toast.classList.add('hidden');
+      });
+
+      // 3. Interactive FAQ Accordion Handler
+      const faqItems = document.querySelectorAll('.faq-item');
+      faqItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+          const answer = item.querySelector('.faq-answer');
+          const icon = item.querySelector('.faq-icon');
+          if (!answer) return;
+
+          const isHidden = answer.classList.contains('hidden');
+          if (isHidden) {
+            answer.classList.remove('hidden');
+            if (icon) icon.classList.remove('rotate-45');
+          } else {
+            answer.classList.add('hidden');
+            if (icon) icon.classList.add('rotate-45');
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
