@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark scroll-smooth">
+<html lang="en" class="dark scroll-smooth overflow-x-hidden">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -148,25 +148,25 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-[#6D42F6] selection:text-white">
+<body class="min-h-screen flex flex-col selection:bg-[#6D42F6] selection:text-white overflow-x-hidden">
 
   <!-- ========================================================= -->
   <!-- 1. DYNAMIC NAVBAR (Transparent at top -> Blurred on scroll)-->
   <!-- ========================================================= -->
-  <nav id="navbar" class="fixed top-0 left-0 w-full z-50 px-16 py-4 flex items-center justify-between transition-all duration-300 bg-transparent">
+  <nav id="navbar" class="fixed top-0 left-0 w-full z-50 px-[20px] md:px-16 h-16 md:h-20 flex items-center justify-between transition-all duration-300 bg-transparent">
     
-    <!-- Left: Klipso Logo (shrink-0) -->
-    <a href="javascript:void(0)" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="shrink-0 flex items-center gap-3 group focus:outline-none">
+    <!-- Left: Klipso Logo (Icon + Text) -->
+    <a href="javascript:void(0)" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="shrink-0 flex items-center gap-2.5 sm:gap-3 group focus:outline-none">
       <svg class="w-8 h-8 text-white transition-transform duration-200 group-hover:scale-105" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="4" y="4" width="6.5" height="30" rx="3.25" fill="currentColor"/>
         <path d="M12.5 19L25.5 7.5V15.2L17.8 19L25.5 22.8V30.5L12.5 19Z" fill="currentColor"/>
         <circle cx="26.5" cy="19" r="3.6" fill="currentColor"/>
         <path d="M25.6 17.5L28.3 19L25.6 20.5V17.5Z" fill="#0B0A16"/>
       </svg>
-      <span class="font-['Aleo'] font-bold text-xl tracking-wide text-white">Klipso</span>
+      <span class="font-['Aleo'] font-bold text-lg sm:text-xl tracking-wide text-white">Klipso</span>
     </a>
 
-    <!-- Navigation Links shifted closer to Logo -->
+    <!-- Navigation Links shifted closer to Logo (hidden on mobile, flex on md+) -->
     <div class="hidden md:flex items-center gap-8 ml-12 lg:ml-16 mr-auto text-[15px] font-normal text-zinc-100">
       <a href="javascript:void(0)" onclick="document.getElementById('features').scrollIntoView({ behavior: 'smooth' })" class="hover:text-white/80 transition-colors">Features</a>
       <a href="javascript:void(0)" onclick="document.getElementById('process').scrollIntoView({ behavior: 'smooth' })" class="hover:text-white/80 transition-colors">How It Works</a>
@@ -189,24 +189,53 @@
       </div>
     </div>
 
-    <!-- Right: Action Buttons -->
-    <div class="flex items-center gap-4 shrink-0 ml-auto md:ml-0">
-      <button type="button" onclick="document.getElementById('hero-input').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => document.getElementById('hero-input').focus(), 500);" class="border border-white/40 hover:border-white text-zinc-200 hover:text-white px-5 py-2 rounded-xl text-sm font-medium bg-[#140F2D]/60 hover:bg-white/5 transition-colors cursor-pointer">
+    <!-- Right Container: Log In (hidden on mobile), Start Free pill, and Hamburger Button (mobile only) -->
+    <div class="flex items-center gap-3 sm:gap-4 shrink-0 ml-auto md:ml-0">
+      <button type="button" onclick="document.getElementById('hero-input').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => document.getElementById('hero-input').focus(), 500);" class="hidden sm:inline-block border border-white/40 hover:border-white text-zinc-200 hover:text-white px-5 py-2 rounded-xl text-sm font-medium bg-[#140F2D]/60 hover:bg-white/5 transition-colors cursor-pointer">
         Log In
       </button>
-      <button type="button" onclick="document.getElementById('hero-input').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => document.getElementById('hero-input').focus(), 500);" class="bg-[#6D42F6] hover:bg-[#5B32E5] text-white px-5 py-2 rounded-xl text-sm font-medium shadow-lg shadow-[#6D42F6]/30 transition-all cursor-pointer">
+      <button type="button" onclick="document.getElementById('hero-input').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => document.getElementById('hero-input').focus(), 500);" class="bg-[#6D42F6] hover:bg-[#5B32E5] text-white px-4 py-2 md:px-5 md:py-2 rounded-full md:rounded-xl text-xs sm:text-sm font-medium shadow-lg shadow-[#6D42F6]/30 transition-all cursor-pointer">
         Start Free
       </button>
+      <button id="mobile-menu-btn" type="button" class="md:hidden text-white p-1.5 focus:outline-none cursor-pointer" aria-label="Open menu" aria-expanded="false">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Panel (#mobileMenu styled after screenshot 6_5.png) -->
+    <div id="mobileMenu" class="hidden md:hidden absolute top-full left-0 w-full bg-[#231C52] px-[20px] pt-7 pb-10 shadow-2xl flex-col z-50 border-b border-white/10">
+      <div class="flex flex-col space-y-6 text-[16px] font-medium text-white">
+        <a href="javascript:void(0)" onclick="document.getElementById('features').scrollIntoView({ behavior: 'smooth' }); closeMobileMenu();" class="hover:text-zinc-200 transition-colors">Features</a>
+        <a href="javascript:void(0)" onclick="document.getElementById('process').scrollIntoView({ behavior: 'smooth' }); closeMobileMenu();" class="hover:text-zinc-200 transition-colors">How It Works</a>
+        <a href="javascript:void(0)" onclick="document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' }); closeMobileMenu();" class="hover:text-zinc-200 transition-colors">Pricing</a>
+        <a href="javascript:void(0)" onclick="document.getElementById('faq').scrollIntoView({ behavior: 'smooth' }); closeMobileMenu();" class="flex items-center justify-between hover:text-zinc-200 transition-colors">
+          <span>FAQ</span>
+          <svg class="w-4 h-4 text-zinc-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="flex flex-col gap-3.5 mt-9">
+        <button type="button" onclick="closeMobileMenu(); document.getElementById('hero-input').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => document.getElementById('hero-input').focus(), 500);" class="w-full py-3 rounded-xl border border-white/80 bg-[#1B1442] hover:bg-white/10 text-white text-[15px] font-medium transition-colors cursor-pointer">
+          Log in
+        </button>
+        <button type="button" onclick="closeMobileMenu(); document.getElementById('hero-input').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => document.getElementById('hero-input').focus(), 500);" class="w-full py-3 rounded-xl bg-[#695AEF] hover:bg-[#5B4CE0] text-white text-[15px] font-medium shadow-lg shadow-black/30 transition-colors cursor-pointer">
+          Start Free
+        </button>
+      </div>
     </div>
   </nav>
 
   <!-- ========================================================= -->
-  <!-- 2. HERO SECTION WITH 8 FLOATING 9:16 SHORT VIDEO CARDS    -->
+  <!-- 2. HERO SECTION WITH FLOATING 9:16 SHORT VIDEO CARDS       -->
   <!-- ========================================================= -->
-  <main id="hero" class="hero-backdrop min-h-[950px] h-screen w-full relative overflow-hidden flex flex-col justify-center items-center pt-24 pb-16 px-4 bg-[#1E194D]/35">
+  <main id="hero" class="hero-backdrop min-h-[680px] xl:min-h-[950px] xl:h-screen w-full relative overflow-hidden flex flex-col justify-center items-center pt-24 pb-16 px-4 bg-[#1E194D]/35">
 
     <!-- CARD 1: Top-Left (Doctor / Brain Surgeon "@diaryofaceoclip") -->
-    <div class="absolute top-24 left-6 lg:left-10 w-36 lg:w-44 aspect-[9/14] rounded-2xl overflow-hidden border border-white/10 shadow-2xl z-10 pointer-events-none hidden md:block bg-zinc-900 float-card-1 card-shadow">
+    <div class="absolute top-24 left-4 2xl:left-12 w-36 lg:w-40 aspect-[9/14] rounded-2xl overflow-hidden border border-white/10 shadow-2xl z-10 pointer-events-none hidden xl:block bg-zinc-900 float-card-1 card-shadow">
       <img 
         src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" 
         onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';"
@@ -232,8 +261,8 @@
       </div>
     </div>
 
-    <!-- CARD 2: Top-Center (Basketball "I CAN MAKE THE SHOT BEFORE HE DOES") -->
-    <div class="floating-card animate-float-2 absolute top-6 left-[calc(50%-4.5rem)] w-36 aspect-[9/14] hidden xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
+    <!-- CARD 2: Top-Center (Basketball "I CAN MAKE THE SHOT BEFORE HE DOES" - pushed to top edge on 2xl only) -->
+    <div class="floating-card animate-float-2 absolute top-3 left-[calc(50%-4rem)] w-32 aspect-[9/14] hidden 2xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
       <img 
         src="https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=500&q=80" 
         onerror="this.src='https://placehold.co/360x560/222230/ffffff?text=Basketball+Challenge'"
@@ -241,20 +270,20 @@
         class="w-full h-full object-cover object-center brightness-95"
       />
       <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/15"></div>
-      <div class="absolute bottom-11 left-2 flex flex-col items-start opacity-90">
+      <div class="absolute bottom-10 left-2 flex flex-col items-start opacity-90">
         <svg class="w-3 h-3 text-white drop-shadow" viewBox="0 0 24 24" fill="currentColor">
           <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
         </svg>
         <span class="text-[5px] text-white/90 font-semibold">TikTok</span>
       </div>
-      <div class="absolute bottom-2.5 inset-x-1 text-center font-viral font-black uppercase leading-none tracking-tight">
-        <div class="text-white text-[9.5px] lg:text-[10.5px] viral-stroke">I CAN MAKE THE SHOT</div>
-        <div class="text-[#FFE600] text-[10px] lg:text-[11px] viral-stroke mt-0.5">BEFORE HE DOES</div>
+      <div class="absolute bottom-2 inset-x-1 text-center font-viral font-black uppercase leading-none tracking-tight">
+        <div class="text-white text-[8.5px] viral-stroke">I CAN MAKE THE SHOT</div>
+        <div class="text-[#FFE600] text-[9px] viral-stroke mt-0.5">BEFORE HE DOES</div>
       </div>
     </div>
 
     <!-- CARD 3: Top-Right ("How Patels Took Over Motels In America") -->
-    <div class="floating-card animate-float-3 absolute top-24 right-6 lg:right-10 w-36 lg:w-44 aspect-[9/14] hidden lg:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
+    <div class="floating-card animate-float-3 absolute top-24 right-4 2xl:right-12 w-36 lg:w-40 aspect-[9/14] hidden xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
       <img 
         src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=500&q=80" 
         onerror="this.src='https://placehold.co/360x560/2b2623/ffffff?text=Documentary+Short'"
@@ -278,8 +307,8 @@
       </div>
     </div>
 
-    <!-- CARD 4: Middle-Left (Podcaster "all 5 days") -->
-    <div class="floating-card animate-float-4 absolute top-[44%] left-44 w-36 aspect-[9/14] hidden xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
+    <!-- CARD 4: Middle-Left (Podcaster "all 5 days" - 2xl only, hugged to edge) -->
+    <div class="floating-card animate-float-4 absolute top-[45%] left-4 2xl:left-12 w-36 lg:w-40 aspect-[9/14] hidden 2xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
       <img 
         src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=500&q=80" 
         onerror="this.src='https://placehold.co/360x560/1f1938/ffffff?text=Creator+Clip'"
@@ -298,8 +327,8 @@
       </div>
     </div>
 
-    <!-- CARD 5: Middle-Right (Female podcaster "following order") -->
-    <div class="floating-card animate-float-5 absolute top-[44%] right-44 w-36 aspect-[9/14] hidden xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
+    <!-- CARD 5: Middle-Right (Female podcaster "following order" - 2xl only, hugged to edge) -->
+    <div class="floating-card animate-float-5 absolute top-[45%] right-4 2xl:right-12 w-36 lg:w-40 aspect-[9/14] hidden 2xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
       <img 
         src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=500&q=80" 
         onerror="this.src='https://placehold.co/360x560/1c2e24/ffffff?text=Podcast+Host'"
@@ -315,8 +344,8 @@
       </div>
     </div>
 
-    <!-- CARD 6: Bottom-Left (Male speaker in nature - >180px vertical separation from Top-Left Card) -->
-    <div class="floating-card animate-float-6 absolute bottom-12 left-6 lg:left-10 w-36 lg:w-44 aspect-[9/14] hidden lg:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
+    <!-- CARD 6: Bottom-Left (Male speaker in nature) -->
+    <div class="floating-card animate-float-6 absolute bottom-10 left-4 2xl:left-12 w-36 lg:w-40 aspect-[9/14] hidden xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 pointer-events-none card-shadow">
       <img 
         src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80" 
         onerror="this.src='https://placehold.co/360x560/1f351f/ffffff?text=Creator+Vlog'"
@@ -326,8 +355,8 @@
       <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-emerald-900/20"></div>
     </div>
 
-    <!-- CARD 7: Bottom-Center (RAW / EDITED split screen) -->
-    <div class="floating-card animate-float-7 absolute bottom-4 left-[calc(50%+3rem)] w-36 aspect-[9/14] hidden xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-950 pointer-events-none card-shadow">
+    <!-- CARD 7: Bottom-Center (RAW / EDITED split screen - 2xl only) -->
+    <div class="floating-card animate-float-7 absolute bottom-4 left-[calc(50%-4rem)] w-32 lg:w-36 aspect-[9/14] hidden 2xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-950 pointer-events-none card-shadow">
       <div class="w-full h-full grid grid-cols-2 relative">
         <!-- Left Half: RAW -->
         <div class="relative h-full border-r border-white/15 overflow-hidden bg-zinc-900">
@@ -366,7 +395,7 @@
     </div>
 
     <!-- CARD 8: Bottom-Right ("To have all this stuff" — Studio Podcast Host) -->
-    <div class="floating-card animate-float-8 absolute bottom-12 right-6 lg:right-10 w-36 lg:w-44 aspect-[9/14] hidden lg:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-950 pointer-events-none card-shadow">
+    <div class="floating-card animate-float-8 absolute bottom-10 right-4 2xl:right-12 w-36 lg:w-40 aspect-[9/14] hidden xl:block z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-950 pointer-events-none card-shadow">
       <img 
         src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80" 
         onerror="this.src='https://placehold.co/360x560/111118/ffffff?text=Studio+Podcast'"
@@ -382,27 +411,27 @@
     </div>
 
     <!-- CENTRAL HERO CONTENT (Z-20, NEVER OVERLAPPED) -->
-    <div class="relative z-20 w-full max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 pt-12 pb-16 md:pt-24 md:pb-28 text-center flex flex-col items-center pointer-events-auto">
+    <div class="relative z-20 max-w-xl md:max-w-2xl mx-auto text-center pointer-events-auto px-2">
       
-      <!-- Main Heading (H1) with Aleo font & responsive wrapping -->
-      <h1 class="font-['Aleo'] text-center text-3xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight leading-[1.12] drop-shadow-sm max-w-3xl">
-        Turn 1 YouTube video<br class="hidden sm:inline" />
-        into 10 viral shorts in<br class="hidden sm:inline" />
-        seconds
+      <!-- Main Heading (H1) strictly divided into 3 clean lines -->
+      <h1 class="font-['Aleo'] font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.15] tracking-wide text-white drop-shadow-sm">
+        <span class="block">Turn 1 YouTube video</span>
+        <span class="block">into 10 viral shorts in</span>
+        <span class="block">seconds</span>
       </h1>
 
       <!-- Subtitle with Aleo font -->
-      <p class="font-['Aleo'] text-sm sm:text-base md:text-lg text-zinc-400 mt-5 max-w-md md:max-w-xl mx-auto leading-relaxed px-2">
+      <p class="font-['Aleo'] tracking-wide text-zinc-300 text-sm sm:text-base mt-5 mb-8 max-w-xl mx-auto leading-relaxed">
         Paste your link, let AI extract the highest-retention moments, add animated captions, and reframe for 9:16 automatically.
       </p>
 
-      <!-- YouTube Link Input Bar -->
-      <form id="generateForm" class="w-full max-w-md md:max-w-lg mt-8">
-        <div class="w-full bg-[#121124] border border-white/10 focus-within:border-[#6D42F6]/80 rounded-2xl md:rounded-full p-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shadow-2xl transition-all">
+      <!-- YouTube Link Input Bar (Vertical stack on mobile, horizontal row on sm+) -->
+      <form id="generateForm" class="w-full max-w-lg mx-auto">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[#07060E] border border-white/10 focus-within:border-[#6D42F6]/80 rounded-2xl p-2 sm:pl-4 shadow-2xl transition-all">
           
-          <div class="flex items-center w-full pl-2 sm:pl-3">
+          <div class="flex items-center w-full px-2 sm:px-0 py-1 sm:py-0">
             <!-- Left Upload Tray Icon -->
-            <svg class="w-5 h-5 text-white shrink-0 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 text-white shrink-0 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0-12L8 8m4-4l4 4" />
             </svg>
 
@@ -411,16 +440,16 @@
               id="hero-input"
               type="text" 
               placeholder="Paste YouTube URL to generate shorts" 
-              class="scroll-mt-36 w-full bg-transparent px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none disabled:opacity-50"
+              class="scroll-mt-36 w-full bg-transparent text-white placeholder-zinc-400 text-xs sm:text-[13.5px] font-normal focus:outline-none pr-2 py-1.5 sm:py-0 disabled:opacity-50"
               autocomplete="off"
             />
           </div>
 
-          <!-- Interactive Generate Button -->
+          <!-- Interactive Generate Button (Full width on mobile, auto on sm+) -->
           <button 
             id="generate-btn"
             type="submit" 
-            class="w-full sm:w-auto px-6 py-2.5 bg-[#6C5CE7] hover:bg-[#5b4cc4] active:scale-95 text-white text-sm font-semibold rounded-xl sm:rounded-full transition-all shrink-0 cursor-pointer shadow-md flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
+            class="w-full sm:w-auto cursor-pointer bg-[#6D42F6] hover:bg-[#5B32E5] active:scale-95 transition-all text-white text-xs sm:text-[13.5px] font-medium px-6 py-3 sm:py-2.5 rounded-xl shrink-0 shadow-md flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
           >
             <svg id="generateSpinner" class="hidden w-4 h-4 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
@@ -432,12 +461,12 @@
       </form>
 
       <!-- Micro-copy below form -->
-      <p class="relative z-20 text-xs text-zinc-500 mt-3 text-center">
+      <p class="relative z-20 mb-8 xl:mb-12 mt-4 text-xs text-zinc-400 text-center">
         No credit card required &bull; 3 free clips
       </p>
 
       <!-- Interactive Status Notification Banner -->
-      <div id="statusToast" class="hidden relative z-30 mt-4 mx-auto max-w-md bg-[#161233]/95 border border-[#6D42F6]/50 rounded-xl px-4 py-3 text-left shadow-2xl backdrop-blur-md transition-all">
+      <div id="statusToast" class="hidden relative z-30 -mt-2 mb-4 mx-auto max-w-md bg-[#161233]/95 border border-[#6D42F6]/50 rounded-xl px-4 py-3 text-left shadow-2xl backdrop-blur-md transition-all">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2.5">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -1885,6 +1914,32 @@
           }
         });
       });
+
+      // 4. Mobile Menu Burger Toggle
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobileMenu');
+
+      window.closeMobileMenu = function () {
+        if (!mobileMenu) return;
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('flex');
+        navbar.classList.remove('!bg-[#231C52]');
+        if (mobileMenuBtn) mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      };
+
+      if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', function () {
+          const isHidden = mobileMenu.classList.contains('hidden');
+          if (isHidden) {
+            mobileMenu.classList.remove('hidden');
+            mobileMenu.classList.add('flex');
+            navbar.classList.add('!bg-[#231C52]');
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
+          } else {
+            window.closeMobileMenu();
+          }
+        });
+      }
     })();
   </script>
 </body>
