@@ -382,43 +382,45 @@
     </div>
 
     <!-- CENTRAL HERO CONTENT (Z-20, NEVER OVERLAPPED) -->
-    <div class="relative z-20 max-w-2xl mx-auto text-center pointer-events-auto">
+    <div class="relative z-20 w-full max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 pt-12 pb-16 md:pt-24 md:pb-28 text-center flex flex-col items-center pointer-events-auto">
       
-      <!-- Main Heading (H1) with Aleo font and tracking-wide -->
-      <h1 class="font-['Aleo'] tracking-wide text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-sm">
-        Turn 1 YouTube video<br />
-        into 10 viral shorts in<br />
+      <!-- Main Heading (H1) with Aleo font & responsive wrapping -->
+      <h1 class="font-['Aleo'] text-center text-3xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight leading-[1.12] drop-shadow-sm max-w-3xl">
+        Turn 1 YouTube video<br class="hidden sm:inline" />
+        into 10 viral shorts in<br class="hidden sm:inline" />
         seconds
       </h1>
 
-      <!-- Subtitle with Aleo font and tracking-wide -->
-      <p class="font-['Aleo'] tracking-wide text-zinc-300 text-sm sm:text-base mt-5 mb-8 max-w-xl mx-auto">
+      <!-- Subtitle with Aleo font -->
+      <p class="font-['Aleo'] text-sm sm:text-base md:text-lg text-zinc-400 mt-5 max-w-md md:max-w-xl mx-auto leading-relaxed px-2">
         Paste your link, let AI extract the highest-retention moments, add animated captions, and reframe for 9:16 automatically.
       </p>
 
       <!-- YouTube Link Input Bar -->
-      <form id="generateForm" class="max-w-lg mx-auto">
-        <div class="flex items-center bg-[#07060E] border border-white/10 focus-within:border-[#6D42F6]/80 rounded-2xl p-2 pl-4 shadow-2xl transition-all">
+      <form id="generateForm" class="w-full max-w-md md:max-w-lg mt-8">
+        <div class="w-full bg-[#121124] border border-white/10 focus-within:border-[#6D42F6]/80 rounded-2xl md:rounded-full p-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shadow-2xl transition-all">
           
-          <!-- Left Upload Tray Icon -->
-          <svg class="w-5 h-5 text-white shrink-0 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0-12L8 8m4-4l4 4" />
-          </svg>
+          <div class="flex items-center w-full pl-2 sm:pl-3">
+            <!-- Left Upload Tray Icon -->
+            <svg class="w-5 h-5 text-white shrink-0 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0-12L8 8m4-4l4 4" />
+            </svg>
 
-          <!-- URL Input with id="hero-input" and scroll-mt-36 -->
-          <input 
-            id="hero-input"
-            type="text" 
-            placeholder="Paste YouTube URL to generate shorts" 
-            class="scroll-mt-36 w-full bg-transparent text-white placeholder-zinc-300 text-xs sm:text-[13.5px] font-normal focus:outline-none pr-2 disabled:opacity-50"
-            autocomplete="off"
-          />
+            <!-- URL Input with id="hero-input" and scroll-mt-36 -->
+            <input 
+              id="hero-input"
+              type="text" 
+              placeholder="Paste YouTube URL to generate shorts" 
+              class="scroll-mt-36 w-full bg-transparent px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none disabled:opacity-50"
+              autocomplete="off"
+            />
+          </div>
 
           <!-- Interactive Generate Button -->
           <button 
             id="generate-btn"
             type="submit" 
-            class="cursor-pointer bg-[#6D42F6] hover:bg-[#5B32E5] active:scale-95 transition-all text-white text-xs sm:text-[13.5px] font-medium px-6 py-2.5 rounded-xl shrink-0 shadow-md flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
+            class="w-full sm:w-auto px-6 py-2.5 bg-[#6C5CE7] hover:bg-[#5b4cc4] active:scale-95 text-white text-sm font-semibold rounded-xl sm:rounded-full transition-all shrink-0 cursor-pointer shadow-md flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
           >
             <svg id="generateSpinner" class="hidden w-4 h-4 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
@@ -429,13 +431,13 @@
         </div>
       </form>
 
-      <!-- Micro-copy below form with relative z-20 mb-12 mt-4 -->
-      <p class="relative z-20 mb-12 mt-4 text-xs text-zinc-400">
+      <!-- Micro-copy below form -->
+      <p class="relative z-20 text-xs text-zinc-500 mt-3 text-center">
         No credit card required &bull; 3 free clips
       </p>
 
       <!-- Interactive Status Notification Banner -->
-      <div id="statusToast" class="hidden relative z-30 -mt-2 mb-4 mx-auto max-w-md bg-[#161233]/95 border border-[#6D42F6]/50 rounded-xl px-4 py-3 text-left shadow-2xl backdrop-blur-md transition-all">
+      <div id="statusToast" class="hidden relative z-30 mt-4 mx-auto max-w-md bg-[#161233]/95 border border-[#6D42F6]/50 rounded-xl px-4 py-3 text-left shadow-2xl backdrop-blur-md transition-all">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2.5">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
